@@ -12,9 +12,9 @@
 #include <Wire.h>
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -82; 
+const float gyro_y_raw_offset= -81.41; 
 const float delta_t= 0.005; // seconds
-int16_t gyro_y_raw;
+int16_t gyro_y_raw, gyro_y; 
 
 // Variables needed to ensure approximate realtime in loop().
 uint32_t newtime, oldtime, timestep, integrated_jitter, time0;  
@@ -41,10 +41,10 @@ void loop(){
   // Measure omega with gyrometer, 
   // integrate phi. 
   gyro_y_raw= get_gyro_y(MPU_ADDRESS); 
-  gyro_y_raw= gyro_y_raw- gyro_y_raw_offset;
+  gyro_y= gyro_y_raw- gyro_y_raw_offset;
 
   // Update states
-  omega= gyro_y_raw* gyroRawTo1000dps; 
+  omega= gyro_y* gyroRawTo1000dps; 
   phi= phi+ omega* delta_t; // integrates omega
   
   // Output for matlab
@@ -53,7 +53,11 @@ void loop(){
     Serial.print(',');
     Serial.print(phi);
     Serial.print(',');
-    Serial.println(omega);
+    Serial.print(omega);
+    Serial.print(',');
+    Serial.print(gyro_y_raw); 
+    Serial.print(',');
+    Serial.println(gyro_y); 
   }
   time_step_counter++; 
      
@@ -104,6 +108,7 @@ void setup() {
   while (!Serial) {
     delay(10); 
   }
+  delay(100); 
 
   // set angle and angular velocity to defined value
   phi= 0.0;   // degrees 
