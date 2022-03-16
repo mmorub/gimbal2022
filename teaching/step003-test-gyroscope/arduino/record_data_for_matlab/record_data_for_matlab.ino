@@ -10,16 +10,17 @@
 // Sensor (MPU6050) I2C address and registers
 // See Datasheets/Invensense2013-MPU-6050-Register-Map.pdf for information
 // on registers; page numbers are page numbers for this document. 
-#define MPU_ADDRESS 0x68      // MPU6050 has either address 0x68 or 0x69
-#define MPU_PWR_MGMT_1 0x6B   // required to wake up MPU6050
-#define MPU_CONFIG 0x1A       // used to set gyro digital low pass filter bandwidth, p. 13
-#define MPU_GYRO_CONFIG 0x1B  // used to set gyro range to +/-1000 deg/s, p. 14 
+#define MPU_ADDRESS 0x68              // MPU6050 has either address 0x68 or 0x69
+#define MPU_PWR_MGMT_1 0x6B           // address required to wake up MPU6050
+#define MPU_CONFIG 0x1A               // address used to set gyro digital low pass filter bandwidth, p. 13
+#define MPU_GYRO_CONFIG 0x1B          // address used to set gyro range 
+const uint8_t gyro_sensitivity= 0x10; // value selects range +/-1000 deg/s, p. 14 
+const float gyroRawTo1000dps= 2.0/32.8; // conversion factor for gyro signal, p. 31, not sure why 2 is required
 
 #include <Wire.h>
 
 // Variables needed for polling gyrometers.
 const int16_t gyro_y_raw_offset= -82; 
-const float gyroRawTo1000dps= 1000.0/32767.0; 
 const float delta_t= 0.005; // seconds
 int16_t gyro_y_raw;
 
@@ -106,9 +107,9 @@ void setup() {
   Wire.write(0);              // to select maximum low pass filter bandwidth
 
   // set gyro resolution 
-  Wire.write(MPU_GYRO_CONFIG);// write 0x10 to MPU_GYRO_CONFIG register
-  Wire.write(0x10);           // to select +/-1000 deg/s sensitivity
-  Wire.endTransmission(true); // true means arduino let's other devices be master
+  Wire.write(MPU_GYRO_CONFIG);  // write 0x10 to MPU_GYRO_CONFIG register
+  Wire.write(gyro_sensitivity); // to select +/-1000 deg/s sensitivity
+  Wire.endTransmission(true);   // true means arduino let's other devices be master
 
   // Connect to serial interface; required for Serial.print. 
   Serial.begin(115200);
