@@ -7,16 +7,7 @@
  * to all registers. 
  */
  
-// Sensor (MPU6050) I2C address and registers
-// See Datasheets/Invensense2013-MPU-6050-Register-Map.pdf for information
-// on registers; page numbers are page numbers for this document. 
-#define MPU_ADDRESS 0x68              // MPU6050 has either address 0x68 or 0x69
-#define MPU_PWR_MGMT_1 0x6B           // address required to wake up MPU6050
-#define MPU_CONFIG 0x1A               // address used to set gyro digital low pass filter bandwidth, p. 13
-#define MPU_GYRO_CONFIG 0x1B          // address used to set gyro range 
-const uint8_t gyro_sensitivity= 0x10; // value selects range +/-1000 deg/s, p. 14 
-const float gyroRawTo1000dps= 2.0/32.8; // conversion factor for gyro signal, p. 31, not sure why 2 is required
-
+#include "MPU.h"
 #include <Wire.h>
 
 // Variables needed for polling gyrometers.
@@ -49,10 +40,11 @@ void loop(){
   // Measure omega with gyrometer, 
   // integrate phi. 
   Wire.beginTransmission(MPU_ADDRESS);
-  Wire.write(0x45);  // start reading at register 0x45 = GYROYOUT_H
+  Wire.write(MPU_GYRO_YOUT_H);     // start reading at register GYRO_YOUT_H= high byte for gyro signal along y-axis
   Wire.endTransmission(false); // send all bytes, false means arduino remains to be master
   Wire.requestFrom(MPU_ADDRESS, 2, true);  // request a total of 2 registers = 2 bytes
   gyro_y_raw = Wire.read() << 8 | Wire.read();  // 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
+  
   gyro_y_raw= gyro_y_raw- gyro_y_raw_offset;
 
   // Update states
