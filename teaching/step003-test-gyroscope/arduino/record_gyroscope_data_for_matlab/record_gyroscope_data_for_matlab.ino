@@ -21,6 +21,18 @@ uint16_t time_step_counter; // counts time steps
 
 float phi, omega; 
 
+/**
+ * Polls gyro signal around y-axis from MPU6050 sensor. 
+ */
+float get_gyro_y_raw(uint8_t the_mpu_address){
+  Wire.beginTransmission(the_mpu_address);
+  Wire.write(MPU_GYRO_YOUT_H);     // start reading at register GYRO_YOUT_H= high byte for gyro signal along y-axis
+  Wire.endTransmission(false); // send all bytes, false means arduino remains to be master
+  Wire.requestFrom(MPU_ADDRESS, 2, true);  // request a total of 2 registers = 2 bytes
+  float gyro_y_raw = Wire.read() << 8 | Wire.read();  // 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
+  return gyro_y_raw; 
+}
+
 void loop(){
 
   const uint16_t num_time_steps= 5*200; // record for this many time steps
@@ -39,12 +51,7 @@ void loop(){
 
   // Measure omega with gyrometer, 
   // integrate phi. 
-  Wire.beginTransmission(MPU_ADDRESS);
-  Wire.write(MPU_GYRO_YOUT_H);     // start reading at register GYRO_YOUT_H= high byte for gyro signal along y-axis
-  Wire.endTransmission(false); // send all bytes, false means arduino remains to be master
-  Wire.requestFrom(MPU_ADDRESS, 2, true);  // request a total of 2 registers = 2 bytes
-  gyro_y_raw = Wire.read() << 8 | Wire.read();  // 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
-  
+  gyro_y_raw= get_gyro_y_raw(MPU_ADDRESS); 
   gyro_y_raw= gyro_y_raw- gyro_y_raw_offset;
 
   // Update states
