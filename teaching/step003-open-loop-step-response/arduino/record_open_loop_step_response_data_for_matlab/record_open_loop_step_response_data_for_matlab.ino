@@ -77,9 +77,9 @@ void loop(){
     time_step_counter= 0; 
     responses_counter++; 
     if (go_clockwise==1){
-      electrical_angle= electrical_angle- angular_step* num_pole_pairs; 
-    } else {
       electrical_angle= electrical_angle+ angular_step* num_pole_pairs; 
+    } else {
+      electrical_angle= electrical_angle- angular_step* num_pole_pairs; 
     }
     go_clockwise= !go_clockwise;
     motor.setPhaseVoltage(Uqmax, 0, electrical_angle); // setPhaseVoltage(Uq, Ud, electrical_angle)
