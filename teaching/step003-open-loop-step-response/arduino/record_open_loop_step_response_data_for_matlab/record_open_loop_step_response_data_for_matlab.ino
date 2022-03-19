@@ -83,6 +83,8 @@ void loop(){
     }
     go_clockwise= !go_clockwise;
     motor.setPhaseVoltage(Uqmax, 0, electrical_angle); // setPhaseVoltage(Uq, Ud, electrical_angle)
+  } else if (responses_counter== num_responses){
+    motor.disable(); 
   }
 
   /**
