@@ -22,7 +22,7 @@ int16_t gyro_y_raw;
 BLDCMotor motor = BLDCMotor(14);
 // BLDCDriver3PWM driver = BLDCDriver3PWM(pwmA, pwmB, pwmC, Enable(optional));
 BLDCDriver3PWM driver = BLDCDriver3PWM(11, 10, 9, 6, 5, 3);
-const float num_pole_pairs= 14.0; // float for convenience
+const float pole_pair_factor= 14.0/2.0; // float for convenience
 const float Uqmax= 5; // V, max voltage to be used in open loop
 
 
