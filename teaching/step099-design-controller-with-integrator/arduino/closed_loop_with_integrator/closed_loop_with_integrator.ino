@@ -29,8 +29,6 @@ float electr_angle;
 
 // Variables needed to ensure approximate realtime in loop().
 uint32_t newtime, oldtime, timestep, integrated_jitter, time0;  
-uint16_t time_step_counter; // counts time steps
-uint16_t responses_counter; // counts step responses
 
 float phi, omega;  // angle and angular velocity of camera
 float r, w; // reference angle and integrated error
@@ -38,7 +36,6 @@ float electrical_angle;
 
 void loop(){
 
-  const uint16_t num_responses= 5; // record for this many time steps
   const uint16_t num_time_steps= 200;         // in between angular steps
   float u; 
 
@@ -170,8 +167,6 @@ void setup() {
    */
   // All times are in microseconds.
   // Do this at the end of setup.
-  time_step_counter= 0; 
-  responses_counter= 0; 
   newtime= 0;
   timestep= 5000; // 5000 microseconds= 5ms, not constant to compensate jitter
   integrated_jitter = 0; // used to adjust timestep
