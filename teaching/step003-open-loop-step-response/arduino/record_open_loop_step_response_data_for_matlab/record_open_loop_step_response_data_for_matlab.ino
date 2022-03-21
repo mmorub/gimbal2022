@@ -111,7 +111,7 @@ void setup() {
    * Motor driver configuration.
    */
   // power supply voltage [V]
-  driver.voltage_power_supply = Uqmax;
+  driver.voltage_power_supply = driver_voltage_power_supply;
   driver.init();
   // link the motor and the driver
   motor.linkDriver(&driver); // motor instance required, because setPhaseVoltage is
