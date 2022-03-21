@@ -112,7 +112,7 @@ void setup() {
    * Motor driver configuration.
    */
   // power supply voltage [V]
-  driver.voltage_power_supply = 13.5;
+  driver.voltage_power_supply = 5;
   driver.init();
   // link the motor and the driver
   motor.linkDriver(&driver); // motor instance required, because setPhaseVoltage is

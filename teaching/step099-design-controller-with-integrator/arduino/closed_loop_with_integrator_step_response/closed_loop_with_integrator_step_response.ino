@@ -36,6 +36,7 @@ float electrical_angle;
 
 uint16_t time_step_counter; // counts time steps
 uint16_t responses_counter; // counts step responses
+uint16_t num_responses= 72; 
 const float input_step= 5;  // deg
 
 void loop(){
@@ -70,28 +71,26 @@ void loop(){
   /** 
    * Update states
    */
-  omega= gyro_y_raw* gyroRawTo1000dps; 
-  phi= phi+ omega* delta_t; // integrates omega
-  w= w+ r- phi; // integrates error e= r- phi
-  u= -kbar[0][0]* phi- kbar[0][1]* omega- kbar[0][2]* w;
-  electr_angle= u* deg_to_rad* pole_pair_factor; 
-  motor.setPhaseVoltage(Uqmax, 0, electr_angle);    
+  if(responses_counter<=num_responses){
+    omega= gyro_y_raw* gyroRawTo1000dps; 
+    phi= phi+ omega* delta_t; // integrates omega
+    w= w+ r- phi; // integrates error e= r- phi
+    u= -kbar[0][0]* phi- kbar[0][1]* omega- kbar[0][2]* w;
+    electr_angle= u* deg_to_rad* pole_pair_factor; 
+    motor.setPhaseVoltage(Uqmax, 0, electr_angle);    
   
-  /**
-   * Output for matlab
-   */
-  Serial.print(responses_counter);
-  Serial.print(','); 
-  Serial.print(newtime- time0);
-  Serial.print(',');
-  Serial.print(phi);
-  Serial.print(',');
-  Serial.print(omega);
-  Serial.print(',');
-  Serial.print(w);
-  Serial.print(',');
-  Serial.println(u);
-
+    Serial.print(responses_counter);
+    Serial.print(','); 
+    Serial.print(newtime- time0);
+    Serial.print(',');
+    Serial.print(phi);
+    Serial.print(',');
+    Serial.print(omega);
+    Serial.print(',');
+    Serial.print(w);
+    Serial.print(',');
+    Serial.println(u);
+  } 
   /**
    * Check if new input step is due
    */
@@ -129,7 +128,7 @@ void setup() {
    * Motor driver configuration.
    */
   // power supply voltage [V]
-  driver.voltage_power_supply = 13.5;
+  driver.voltage_power_supply = 5;
   driver.init();
   // link the motor and the driver
   motor.linkDriver(&driver); // motor instance required, because setPhaseVoltage is
