@@ -6,23 +6,20 @@
  * to all registers. 
  */
  
-#include "MPU.h"
+#include "MyMPU6050Sensor.h"
+#include "MyGB2208Motor.h" 
 #include "get_gyro_y.h"
 #include <Wire.h>
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
 const int16_t gyro_y_raw_offset= -82; 
-const float delta_t= 0.005; // seconds
+const float delta_t= 0.005; // sampling time in seconds
 int16_t gyro_y_raw;
 
 // BLDC motor & driver instance
-// BLDCMotor motor = BLDCMotor(pole pair number);
-BLDCMotor motor = BLDCMotor(14);
-// BLDCDriver3PWM driver = BLDCDriver3PWM(pwmA, pwmB, pwmC, Enable(optional));
-BLDCDriver3PWM driver = BLDCDriver3PWM(11, 10, 9, 6, 5, 3);
-const float pole_pair_factor= 14.0/2.0; // float for convenience
-const float Uqmax= 5; // V, max voltage to be used in open loop
+BLDCMotor motor = BLDCMotor(pole_pair_number);
+BLDCDriver3PWM driver = BLDCDriver3PWM(11, 10, 9, 6, 5, 3); // BLDCDriver3PWM(pwmA, pwmB, pwmC, Enable(optional));
 
 
 // Variables needed to ensure approximate realtime in loop().
@@ -114,18 +111,17 @@ void setup() {
    * Motor driver configuration.
    */
   // power supply voltage [V]
-  driver.voltage_power_supply = 5.0;
+  driver.voltage_power_supply = Uqmax;
   driver.init();
   // link the motor and the driver
   motor.linkDriver(&driver); // motor instance required, because setPhaseVoltage is
 
-  // set motor constraints and init motor
-  motor.voltage_limit = 5.0;   // [V]
+  // set motor constraints and initialize motor
+  motor.voltage_limit = Uqmax;   // [V]
   motor.velocity_limit = 500/360*2*3.1416; // 500deg/s 
-  // init motor hardware
   motor.init();
 
-  // setPhaseVoltage(Uq, Ud, electrical_angle
+  // setPhaseVoltage(Uq, Ud, electrical_angle)
   electrical_angle= 0; // rad
   motor.setPhaseVoltage(Uqmax, 0, electrical_angle);    
   delay(1000); 
