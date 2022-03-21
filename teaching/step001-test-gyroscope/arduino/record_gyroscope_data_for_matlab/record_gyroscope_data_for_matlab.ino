@@ -7,7 +7,7 @@
  * to all registers. 
  */
  
-#include "MPU.h"
+#include "MyMPU6050Sensor.h"
 #include "get_gyro_y.h"
 #include <Wire.h>
 
