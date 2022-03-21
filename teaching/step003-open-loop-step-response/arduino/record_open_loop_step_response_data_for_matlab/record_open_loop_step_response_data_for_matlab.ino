@@ -114,13 +114,13 @@ void setup() {
    * Motor driver configuration.
    */
   // power supply voltage [V]
-  driver.voltage_power_supply = 13.5;
+  driver.voltage_power_supply = 5.0;
   driver.init();
   // link the motor and the driver
   motor.linkDriver(&driver); // motor instance required, because setPhaseVoltage is
 
   // set motor constraints and init motor
-  motor.voltage_limit = 5;   // [V]
+  motor.voltage_limit = 5.0;   // [V]
   motor.velocity_limit = 500/360*2*3.1416; // 500deg/s 
   // init motor hardware
   motor.init();
