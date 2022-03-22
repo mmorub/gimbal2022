@@ -8,6 +8,7 @@
  */
  
 #include "MyMPU6050Sensor.h"
+#include "MyGB2208Motor.h"
 #include "get_gyro_y.h"
 #include <Wire.h>
 #include <SimpleFOC.h> 
@@ -23,8 +24,6 @@ int16_t gyro_y_raw;
 BLDCMotor motor = BLDCMotor(14);
 // BLDCDriver3PWM driver = BLDCDriver3PWM(pwmA, pwmB, pwmC, Enable(optional));
 BLDCDriver3PWM driver = BLDCDriver3PWM(11, 10, 9, 6, 5, 3);
-const float pole_pair_factor= 14.0/2.0; // float for convenience
-const float Uqmax= 5; // V, max voltage to be used in open loop
 float electr_angle;  
 
 // Variables needed to ensure approximate realtime in loop().
@@ -126,13 +125,13 @@ void setup() {
    * Motor driver configuration.
    */
   // power supply voltage [V]
-  driver.voltage_power_supply = 7.5;
+  driver.voltage_power_supply = driver_voltage_power_supply;
   driver.init();
   // link the motor and the driver
   motor.linkDriver(&driver); // motor instance required, because setPhaseVoltage is
 
   // set motor constraints and init motor
-  motor.voltage_limit = 5;   // [V]
+  motor.voltage_limit = Uqmax;   // [V]
   motor.velocity_limit = 500/360*2*3.1416; // 500deg/s 
   // init motor hardware
   motor.init();
