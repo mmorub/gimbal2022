@@ -7,7 +7,7 @@
  * to all registers. 
  */
  
-#include "MPU.h"
+#include "MyMPU6050Sensor.h"
 #include "get_gyro_y.h"
 #include <Wire.h>
 #include <SimpleFOC.h> 
@@ -42,9 +42,7 @@ void loop(){
   /**
    * Feedback matrix (a row vector here) from matlab
   */
-  //const float kbar[1][3]= {-0.179019537120124, 0.011257210393251, -0.063682519707040}; // cont time poles at -51, -50, -53 (last entry belongs to integrator)
-  //const float kbar[1][3]= {1.473058724086584, 0.021489161153940, -0.354896359596025}; // cont time poles at -101, -100, -102 
-  const float kbar[1][3]= {0.831229067444387, 0.014940651136622, -0.265843629837101}; // cont time poles at -101, -100, -102, (last one belongs to integrator)
+  const float kbar[1][3]= {1.299159678653990, 0.018695718232824, -0.321683324712234}; // cont time poles at -101, -100, -102, (last one belongs to integrator)
   /**
    * Needed to ensure approximate realtime, do not alter.
    * Wait until current timestep is over.
