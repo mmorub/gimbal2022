@@ -25,10 +25,10 @@ Finally, you will get to know matlab and learn a bit about microcontroller progr
 
 Attempting to clean up repository gimbal, just so gimbal2 can be used in courses. 
 
-[check_gyroscope_offset](https://git.noc.ruhr-uni-bochum.de/teaching-control-mb-rub/labs/gimbal2/teaching/step001-test-gyroscope/matlab/html/check_gyroscope_offset.html)
+[check_gyroscope_offset](teaching/step001-test-gyroscope/matlab/html/check_gyroscope_data.html)
 
 [check_gyroscope_data](../teaching/step001-test-gyroscope/matlab/html/check_gyroscope_data.html)
 
 [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is AWESOME")  [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is AWESOME") 
 
-![sample pic](./readme-files/sample.jpg "silly sample pic")
+![sample pic](../readme-files/sample.jpg "silly sample pic")
