@@ -25,7 +25,7 @@ Finally, you will get to know matlab and learn a bit about microcontroller progr
 
 Attempting to clean up repository gimbal, just so gimbal2 can be used in courses. 
 
-[check_gyroscope_offset](/teaching/step001-test-gyroscope/matlab/html/check_gyroscope_data.html)
+[check_gyroscope_offset](teaching/step001-test-gyroscope/matlab/html/check_gyroscope_data.html)
 
 [check_gyroscope_data](../teaching/step001-test-gyroscope/matlab/html/check_gyroscope_data.html)
 
