@@ -31,4 +31,4 @@ Attempting to clean up repository gimbal, just so gimbal2 can be used in courses
 
 [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is AWESOME")  [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is AWESOME") 
 
-![sample pic](./readme-files/sample.jpg "silly sample pic")
+![sample pic](../readme-files/sample.jpg "silly sample pic")
