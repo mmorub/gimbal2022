@@ -96,6 +96,25 @@ All steps taken by the matlab script are explained in the script itself. Make su
 ```
 The output of the matlab script is shown [here](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html) for a turn by 90 degrees in one direction and 90 degrees back. 
 
+## Calibrate and repeat
+
+Gyroscopes suffer from a constant offset. We need to determine this offset and subtract it everytime we poll it. This happens in the line 
+```
+  gyro_y= gyro_y_raw- gyro_y_raw_offset;
+```
+where the offset is set in the header of the arduino sketch in the line
+```
+  // Variables needed for polling gyrometers.
+  const float gyro_y_raw_offset= -82.768; 
+```
+The offset was determined for one of the sensors used in the lab. It needs to be adjusted for the instance of the sensor you are using. Carry out these steps to do so:
+* Clear the serial monitor.
+* Run the same arduino sketch as before again, but do not move the camera.
+* Copy and paste the result in the arduino serial monitor to a text editor and store it in a new file. It is convenient to name this file gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/calibration_data_for_matlab.txt, because this filename is used in the matlab script.
+* Run the matlab script check_gyroscope_offset.mlx to determine the offset.
+The result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_offset.html).  
+* Set the offset in check_gyroscope_data.mlx, and run the test again. Check again if the output rembles this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html).
+
 TODO Reduce existing script just so it does not integrate the angular velocity.
 
 TODO Use pretty phi, t and so on in the live scripts. 
