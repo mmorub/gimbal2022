@@ -18,7 +18,7 @@ TODO: Video
 ### Steps
 In a nutshell, these steps are required:
   * [**Understand and test the sensor**](#understand-and-test-the-sensor). We use a gyroscope that transmits its signal to a microcontroller. 
-  * [**Use the sensor to measure a step-response**](#measure-open-loop-step-response). We force the camera to turn by a certain angle (say, $5$ or $10$ degrees) with a motor, and we control this motor by sending commands from the microcontroller to a motor driver. Recording the sensor signal with the microcontroller as the camera turns then yields the step response. 
+  * [**Use the sensor to measure a step-response**](#measure-an-open-loop-step-response). We force the camera to turn by a certain angle (say, $5$ or $10$ degrees) with a motor, and we control this motor by sending commands from the microcontroller to a motor driver. Recording the sensor signal with the microcontroller as the camera turns then yields the step response. 
   * [**Find a transfer function that describes the step-response**](#identify-a-transfer-function). The transfer function will describe how the signal sent to the motor driver turns into ("is transferred into") the angle by which the camera is actually turned. The transfer function is our system model. 
   * [**Design a controller using the transfer function**](#design-a-controller). This requires the methods that you learn about in your automatic control courses.  
   * [**Test the closed-loop system**](#test-the-closed-loop-system). 
