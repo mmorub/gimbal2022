@@ -94,7 +94,7 @@ All steps taken by the matlab script are explained in the script itself. Make su
   title("phi, integrated from omega in matlab");
   xlabel("t in seconds");
 ```
-
+The output of the matlab script is shown [here](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html) for a turn by 90 degrees in one direction and 90 degrees back. 
 
 TODO Reduce existing script just so it does not integrate the angular velocity.
 
