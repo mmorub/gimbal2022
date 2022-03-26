@@ -38,12 +38,13 @@ void loop(){
    * end real time control 
    */
 
-  // Measure omega with gyrometer, 
-  // integrate phi. 
+  // Measure angular velocity omega with gyrometer, 
+  // subtract offset.
   gyro_y_raw= get_gyro_y(MPU_ADDRESS); 
   gyro_y= gyro_y_raw- gyro_y_raw_offset;
 
-  // Update states
+  // Convert angular velocity to degrees per second (dps),
+  // integrate to angle phi. 
   omega= gyro_y* gyroRawTo1000dps; 
   phi= phi+ omega* delta_t; // integrates omega
   

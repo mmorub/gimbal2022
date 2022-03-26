@@ -31,29 +31,74 @@ You will also see that it is not the point to find a model that is as precise as
 
 You will get to know matlab and learn a bit about microcontroller programming for digital control. The microcontroller and sensor board used here are used in many maker projects (in other words, they were never designed for industrial use). Rest assured that everything you learn here about microcontrollers and sensors also applies to their industrial variants.  
 
-# Understand and test the sensor
+# Understand and test the sensor 
+**All required code is in lab/step001-test-gyroscope/**. 
+
 We use a gyroscope to measure the angular velocity by which the camera is turned. The particular gyroscope used here is a [MEMS Gyroscope](https://en.wikipedia.org/wiki/Vibrating_structure_gyroscope#MEMS_gyroscopes), which was [originally designed for use in devices like smartphones](https://invensense.tdk.com/products/motion-tracking/6-axis/mpu-6050/). In our case the sensor comes on a little prototyping board shown in the picture of the [components](#introduction).
 
+## Record gyroscope data with the arduino (lab/step001-test-gyroscope/arduino)
 Let's start by turning the camera on the gimbal by hand and measuring the angle with the gyroscope. You need to use the Arduino IDE and its serial monitor for this. You also need Matlab in the next step. Everything you need is installed on the PCs in the lab. If you are using your own PC or laptop, check the brief description of the [prerequisites](#prerequisites).
 MPfd
 You do not need to plug in the separate power supply for these steps yet. The separate power supply is for the motor, which is still turned off here:
 
- * Open the arduino sketch in gimbal2022/lab/step001-test-gyroscope/ in your Arduino IDE. First connect the arduino with the USB cable and check if you can compile and upload your code. Do not plug in the separate power supply. 
+ * **Open the arduino sketch** in gimbal2022/lab/step001-test-gyroscope/ in your Arduino IDE. First **connect the arduino** with the USB cable and check if you can compile and upload your code. **Do not plug in the separate power supply**. 
 
- * You should always have an empty arduino sketch open that you can upload immediately to reset the arduino in case anything goes wrong. Practise uploading an empty sketch just to be sure. 
+ * You should always **have an empty arduino sketch open** that you can upload immediately to reset the arduino in case anything goes wrong. You can create an empty sketch by clicking File->New in the Arduino IDE. Practise uploading an empty sketch just to be sure. 
 
- * Now open the arduino serial monitor. Upload the sketch again and verify the serial monitor is printing lines for the duration set in the sketch. We print for a few seconds and then stop, just so the serial monitor will show a finite set of data for use in matlab. 
+ * Now **open the arduino serial monitor**. Upload the sketch again and verify the serial monitor is printing lines for the duration set in the sketch. We print for a few seconds and then stop, just so the serial monitor will show a finite set of data for use in matlab. 
 
  * Upload the sketch and, once it starts running, turn the camera in its case. Try to turn is by a defined angle such as 90 degrees and observe that the numbers shown in the serial monitor change as you move the camera. 
 
- Once you completed the steps above, you are ready to record data for use in matlab:
+ Once you completed the steps above, you are ready to **record data for use in matlab**:
 
   * Upload an empty arduino sketch.
   * Clear the serial monitor.
-  * Upload our arduino sketch, wait for the Arduino IDE to display "Upload completed" and the serial monitor to start printing, then turn the camera by a defined angle. 
+  * Upload our arduino sketch, wait for the Arduino IDE to display "Upload completed" and the serial monitor to start printing, then turn the camera by a defined angle. For example, turn it 90 degrees clockwise and 90 degrees back. 
   * Select the output in the serial monitor (try double clicking and using CTRL-A to select all) and paste it into your favourite text editor.
   * Save to a text file. It is convenient to save it to gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/data_for_matlab.txt, because this filename is accessed by the matlab script used below. 
 
+## Analyse recorded data in matlab (lab/step001-test-gyroscope/matlab)
+
+Start matlab and open the script check_gyroscope_data.mlx. The script loads the data from the text file you just created. You will have to adjust the script so it finds your data file. If you have not created a data text file in the previous step, the script will use the one provided on the repo. Make sure you work with your own data! 
+
+All steps taken by the matlab script are explained in the script itself. Make sure you understand the following points:
+
+* The gyroscope measures **angular velocity**. Because we want to control the angle of the camera, we need to **integrate the angular velocity** to yield the angle. 
+* Because we measure the angular velocity at **discrete points in time**, the integration is approximated by a summation. The arduino is programmed to take every 5 microseconds. This is the sampling time, which is called *delta_t* in the code. 
+* The arduino carries out the summation (the approximate integration) in these lines, where *phi* and *omega* refer to the angle and the angular velocity, respectively:
+(We will treat *gyro_y_raw_offset* below.)
+```
+  // measure phi and integrate omega with the arduino
+
+  // Measure angular velocity omega with gyrometer, 
+  // subtract offset.
+  gyro_y_raw= get_gyro_y(MPU_ADDRESS); 
+  gyro_y= gyro_y_raw- gyro_y_raw_offset;
+
+  // Convert angular velocity to degrees per second (dps),
+  // integrate to angle phi. 
+  omega= gyro_y* gyroRawTo1000dps; 
+  phi= phi+ omega* delta_t; // integrates omega
+```
+* The arduino prints the angle *phi* and angular velocity *omega* to the serial monitor. This way, they are both available after reading the data file in matlab. For the sake of testing, we also calculate *phi* independently by integrating *omega* recorded by the arduino. This happens in these lines in the matlab code:
+```
+  # integrate omega in matlab
+
+  delta_t= 0.005; % seconds
+  phimatlab= zeros(1, length(tdata)); 
+  for i=2:length(tdata)
+      phimatlab(i)= phimatlab(i-1)+ delta_t* omegadata(i);
+  end
+  figure();
+  plot(tdata, phimatlab); 
+  title("phi, integrated from omega in matlab");
+  xlabel("t in seconds");
+```
+
+
+TODO Reduce existing script just so it does not integrate the angular velocity.
+
+TODO Use pretty phi, t and so on in the live scripts. 
 
 # Measure an open-loop step response
 Hello World.
