@@ -11,7 +11,7 @@ TODO: Photo of components
 
 TODO: Video
 
-| ![sample pic](readme-files/sample.jpg "silly sample pic") |  [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is AWESOME") |
+| ![components of the gimbal](readme-files/componentsOfTheGimbal.png "Components of the gimbal") |  [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is Awesome") |
 |:--:|:--:|
 | *Components of the gimbal* | *Gimbal demo*  |
 
