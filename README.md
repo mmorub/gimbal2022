@@ -5,13 +5,13 @@ In this hackathon, you program a one-axis gimbal controller.
 
 It is our goal to determine a transfer function for the motor-camera combination, and to design a controller that keeps the camera upright if we turn its handle. The code is written in C for an arduino microcontroller, and we use matlab for visualization, analysis and controller design. 
 
-The hardware is provided in the lab at RUB. While this is not the focus of the hackathon, you can also build the hardware yourself. You could explore how to use a smaller controller and motor driver, for example, or how to run the hardware on batteries.   
+The hardware is provided in the lab at RUB. While this is not the focus of the hackathon, you can also build the hardware yourself. You could explore how to use a smaller controller and motor driver, how to run the hardware on batteries, or 3d-print a nicer stand, for example. 
 
 TODO: Photo of components
 
 TODO: Video
 
-| ![components of the gimbal](readme-files/componentsOfTheGimbal.png "Components of the gimbal") |  [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is Awesome") |
+| ![components of the gimbal](readme-files/componentsOfTheGimbal.jpg "Components of the gimbal") |  [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is Awesome") |
 |:--:|:--:|
 | *Components of the gimbal* | *Gimbal demo*  |
 
@@ -38,16 +38,16 @@ We use a gyroscope to measure the angular velocity by which the camera is turned
 
 ## Record gyroscope data with the arduino (lab/step001-test-gyroscope/arduino)
 Let's start by turning the camera on the gimbal by hand and measuring the angle with the gyroscope. You need to use the Arduino IDE and its serial monitor for this. You also need Matlab in the next step. Everything you need is installed on the PCs in the lab. If you are using your own PC or laptop, check the brief description of the [prerequisites](#prerequisites).
-MPfd
-You do not need to plug in the separate power supply for these steps yet. The separate power supply is for the motor, which is still turned off here:
 
- * **Open the arduino sketch** in gimbal2022/lab/step001-test-gyroscope/ in your Arduino IDE. First **connect the arduino** with the USB cable and check if you can compile and upload your code. **Do not plug in the separate power supply**. 
+You **do not need to plug in the separate power supply** for these steps yet. The separate power supply is for the motor, which is still turned off here:
 
- * You should always **have an empty arduino sketch open** that you can upload immediately to reset the arduino in case anything goes wrong. You can create an empty sketch by clicking File->New in the Arduino IDE. Practise uploading an empty sketch just to be sure. 
+ * **Open the arduino sketch** in gimbal2022/lab/step001-test-gyroscope/ in your Arduino IDE. **Connect the arduino** with the USB cable and check if you can compile and upload your code. **Do not plug in the separate power supply**. 
 
- * Now **open the arduino serial monitor**. Upload the sketch again and verify the serial monitor is printing lines for the duration set in the sketch. We print for a few seconds and then stop, just so the serial monitor will show a finite set of data for use in matlab. 
+ * You should always **have an empty arduino sketch open** that you can upload immediately to reset the arduino in case anything goes wrong. You can create an empty sketch by clicking File->New in the Arduino IDE. **Practise uploading an empty sketch** just to be sure. 
 
- * Upload the sketch and, once it starts running, turn the camera in its case. Try to turn is by a defined angle such as 90 degrees and observe that the numbers shown in the serial monitor change as you move the camera. 
+ * Now **open the arduino serial monitor**. Upload the sketch again and verify the serial monitor is printing lines for the duration set in the sketch. Try to find this duration by reading the sketch. We print for a few seconds and then stop, just so the serial monitor will show a finite set of data for use in matlab. 
+
+ * Upload the sketch and, once it starts running, **turn the camera in its case by hand**. Try to turn it by a defined angle such as 90 degrees and observe that the numbers shown in the serial monitor change as you move the camera. You will only see the numbers run across the screen without being able make sense out of them at this point. We will record them for use in matlab in the next step. 
 
  Once you completed the steps above, you are ready to **record data for use in matlab**:
 
@@ -63,8 +63,8 @@ Start matlab and open the script check_gyroscope_data.mlx. The script loads the 
 
 All steps taken by the matlab script are explained in the script itself. Make sure you understand the following points:
 
-* The gyroscope measures **angular velocity**. Because we want to control the angle of the camera, we need to **integrate the angular velocity** to yield the angle. 
-* Because we measure the angular velocity at **discrete points in time**, the integration is approximated by a summation. The arduino is programmed to take every 5 microseconds. This is the sampling time, which is called *delta_t* in the code. 
+* The gyroscope measures **angular velocity**. Because we want to control the angle of the camera, we need to **integrate the angular velocity** to determine the angle. 
+* Because we measure the angular velocity at **discrete points in time**, the integration is approximated by a summation. The arduino is programmed to take a measurement every 5 microseconds. This is the sampling time, which is called *delta_t* in the code. 
 * The arduino carries out the summation (the approximate integration) in these lines, where *phi* and *omega* refer to the angle and the angular velocity, respectively:
 (We will treat *gyro_y_raw_offset* below.)
 ```
@@ -80,7 +80,7 @@ All steps taken by the matlab script are explained in the script itself. Make su
   omega= gyro_y* gyroRawTo1000dps; 
   phi= phi+ omega* delta_t; // integrates omega
 ```
-* The arduino prints the angle *phi* and angular velocity *omega* to the serial monitor. This way, they are both available after reading the data file in matlab. For the sake of testing, we also calculate *phi* independently by integrating *omega* recorded by the arduino. This happens in these lines in the matlab code:
+* The arduino prints the angle *phi* and angular velocity *omega* to the serial monitor. This way, they are both available after reading the data file in matlab. For the sake of testing, we also calculate *phi* independently in matlab by integrating *omega* recorded by the arduino in matlab. This happens in these lines in the matlab code:
 ```
   # integrate omega in matlab
 
@@ -98,7 +98,7 @@ The output of the matlab script is shown [here](https://raw.githack.com/mmorub/g
 
 ## Calibrate and repeat
 
-Gyroscopes suffer from a constant offset. We need to determine this offset and subtract it everytime we poll it. This happens in the line 
+Gyroscopes suffer from a constant offset. We need to determine this offset and subtract it everytime we take a measurement with the gyroscope. This happens in the line 
 ```
   gyro_y= gyro_y_raw- gyro_y_raw_offset;
 ```
@@ -107,13 +107,13 @@ where the offset is set in the header of the arduino sketch in the line
   // Variables needed for polling gyrometers.
   const float gyro_y_raw_offset= -82.768; 
 ```
-The offset was determined for one of the sensors used in the lab. It needs to be adjusted for the instance of the sensor you are using. Carry out these steps to do so:
+The offset was determined for one of the sensors used in the lab. It needs to be adjusted for the particular sensor you are using. Carry out these steps to do so:
 * Clear the serial monitor.
-* Run the same arduino sketch as before again, but do not move the camera.
+* Run the arduino sketch in lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/ again, but **do not move the camera this time**.
 * Copy and paste the result in the arduino serial monitor to a text editor and store it in a new file. It is convenient to name this file gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/calibration_data_for_matlab.txt, because this filename is used in the matlab script.
 * Run the matlab script check_gyroscope_offset.mlx to determine the offset.
-The result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_offset.html).  
-* Set the offset in check_gyroscope_data.mlx, and run the test again. Check again if the output rembles this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html).
+The result of the matlab script should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_offset.html). Use this sample output and the sample data files only for debugging your own script.  
+* Set the offset in check_gyroscope_data.mlx, and run the test again. Check again if the output rembles this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html). Again, use this output only for debugging and make sure you complete your own run.
 
 TODO Reduce existing script just so it does not integrate the angular velocity.
 
