@@ -36,7 +36,9 @@ You will get to know matlab and learn a bit about microcontroller programming fo
 
 We use a gyroscope to measure the angular velocity by which the camera is turned. The particular gyroscope used here is a [MEMS Gyroscope](https://en.wikipedia.org/wiki/Vibrating_structure_gyroscope#MEMS_gyroscopes), which was [originally designed for use in devices like smartphones](https://invensense.tdk.com/products/motion-tracking/6-axis/mpu-6050/). In our case the sensor comes on a little prototyping board shown in the picture of the [components](#introduction).
 
-## Record gyroscope data with the arduino (lab/step001-test-gyroscope/arduino)
+## Record gyroscope data with the arduino 
+**All required code is in lab/step001-test-gyroscope/arduino**.
+
 Let's start by turning the camera on the gimbal by hand and measuring the angle with the gyroscope. You need to use the Arduino IDE and its serial monitor for this. You also need Matlab in the next step. Everything you need is installed on the PCs in the lab. If you are using your own PC or laptop, check the brief description of the [prerequisites](#prerequisites).
 
 You **do not need to plug in the separate power supply** for these steps yet. The separate power supply is for the motor, which is still turned off here:
@@ -57,16 +59,17 @@ You **do not need to plug in the separate power supply** for these steps yet. Th
   * Select the output in the serial monitor (try double clicking and using CTRL-A to select all) and paste it into your favourite text editor.
   * Save to a text file. It is convenient to save it to gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/data_for_matlab.txt, because this filename is accessed by the matlab script used below. 
 
-## Analyse recorded data in matlab (lab/step001-test-gyroscope/matlab)
+## Analyse recorded data in matlab 
+**All required code is in lab/step001-test-gyroscope/matlab**.
 
 Start matlab and open the script check_gyroscope_data.mlx. The script loads the data from the text file you just created. You will have to adjust the script so it finds your data file. If you have not created a data text file in the previous step, the script will use the one provided on the repo. Make sure you work with your own data! 
 
 All steps taken by the matlab script are explained in the script itself. Make sure you understand the following points:
 
 * The gyroscope measures **angular velocity**. Because we want to control the angle of the camera, we need to **integrate the angular velocity** to determine the angle. 
-* Because we measure the angular velocity at **discrete points in time**, the integration is approximated by a summation. The arduino is programmed to take a measurement every 5 microseconds. This is the sampling time, which is called *delta_t* in the code. 
-* The arduino carries out the summation (the approximate integration) in these lines, where *phi* and *omega* refer to the angle and the angular velocity, respectively:
-(We will treat *gyro_y_raw_offset* below.)
+* Because we measure the angular velocity at **discrete points in time**, the integration is approximated by a summation. The arduino is programmed to take a measurement every 5 microseconds. This is the sampling time, which is called `delta_t` in the code. 
+* The arduino carries out the summation (the approximate integration) in these lines, where `phi` and `omega` refer to the angle and the angular velocity, respectively:
+(We will treat `gyro_y_raw_offset` below.)
 ```
   // measure phi and integrate omega with the arduino
 
@@ -80,7 +83,7 @@ All steps taken by the matlab script are explained in the script itself. Make su
   omega= gyro_y* gyroRawTo1000dps; 
   phi= phi+ omega* delta_t; // integrates omega
 ```
-* The arduino prints the angle *phi* and angular velocity *omega* to the serial monitor. This way, they are both available after reading the data file in matlab. For the sake of testing, we also calculate *phi* independently in matlab by integrating *omega* recorded by the arduino in matlab. This happens in these lines in the matlab code:
+* The arduino prints the angle `phi` and angular velocity `omega` to the serial monitor. This way, they are both available after reading the data file in matlab. For the sake of testing, we also calculate `phi` independently in matlab by integrating `omega` recorded by the arduino in matlab. This happens in these lines in the matlab code:
 ```
   # integrate omega in matlab
 
