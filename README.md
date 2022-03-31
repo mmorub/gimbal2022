@@ -7,9 +7,9 @@ It is our goal to determine a transfer function for the motor-camera combination
 
 The hardware is provided in the lab at RUB. While this is not the focus of the hackathon, you can also build the hardware yourself. You could explore how to use a smaller controller and motor driver, how to run the hardware on batteries, or 3d-print a nicer stand, for example. 
 
-TODO: Photo of components
+<span style="color: red"> TODO: Photo of components </span>
 
-TODO: Video
+<span style="color: red"> TODO: Video </span>
 
 | ![components of the gimbal](readme-files/componentsOfTheGimbal.jpg "Components of the gimbal") |  [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is Awesome") |
 |:--:|:--:|
@@ -120,41 +120,59 @@ The result of the matlab script should look like this [output](https://raw.githa
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
-TODO Reduce existing script just so it does not integrate the angular velocity.
+<span style="color: red"> TODO Reduce existing script just so it does not integrate the angular velocity. </span>
 
-TODO Use pretty phi, t and so on in the live scripts. 
+<span style="color: red"> TODO Use pretty phi, t and so on in the live scripts. </span>
 
 # Measure an open-loop step response
 **All required code is in lab/step002-open-loop-step-response**.
 
-We use the motor for the first time in this step. When we turn on the motor, it will lock into a random position. The motor is turned on in the setup-function in the arduino code. The first few lines prepare a `driver` and a `motor` instance. Details are not important at this point, but you can see that the microcontroller needs to know the supply voltage provided to the driver, and we set a velocity limit. Note that the values of `driver_voltage_power_supply` and `Uqmax` are set in the file [MyGB2208Motor.h](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/MyGB2208Motor.h):
+<span style="color: red"> TODO: Briefly describe the motor and the driver in this text block:</span>
+
+We use the motor for the first time in this step. When we turn on the motor, it will lock into a random position. The motor is turned on in the setup-function in the arduino code. The first few lines prepare a `driver` and a `motor` instance. Details are not important at this point, but you can see that the microcontroller needs to know the supply voltage provided to the driver, and we set a voltage and a velocity limit. Note that the values of `driver_voltage_power_supply`, `Uqmax` and `motor_velocity_limit` are set in the file [MyGB2208Motor.h](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/MyGB2208Motor.h):
 ```
-  driver.voltage_power_supply = driver_voltage_power_supply;
+  driver.voltage_power_supply = driver_voltage_power_supply; // set to e.g. 
+                                               // 7.5V in MyGB2208Motor.h 
   driver.init();
-  // link the motor and the driver
-  motor.linkDriver(&driver); // motor instance required, because setPhaseVoltage is
+  motor.linkDriver(&driver);                   // link the motor and the driver
 
   // set motor constraints and initialize motor
-  motor.voltage_limit = Uqmax;   // [V]
-  motor.velocity_limit = 500/360*2*3.1416; // 500deg/s 
+  motor.voltage_limit = Uqmax;                 // set to e.g. 5V in MyGB2208Motor.h 
+  motor.velocity_limit = motor_velocity_limit; // set to e.g. 500deg/s in MyGB2208Motor.h  
   motor.init();
 
-  // setPhaseVoltage(Uq, Ud, electrical_angle)
   electrical_angle= 0; // rad
-  motor.setPhaseVoltage(Uqmax, 0, electrical_angle);    
-  delay(1000); 
+  motor.setPhaseVoltage(Uqmax, 0, electrical_angle); // syntax is 
+                                               // setPhaseVoltage(Uq, Ud, electrical_angle)
+  delay(1000);                                 // wait 1s
 ```
-(from [setup() in record_open_loop_step_response_data_for_matlab.ino](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab))
+(from [setup() in record_open_loop_step_response_data_for_matlab.ino](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino))
 
-The last lines in this code snippet set the motor angle to zero degrees. The command `delay(1000);` tells the microcontroller to pause for a second (1000 microseconds) before continuing with the remainder of the `setup()` function. 
+The last lines in the code snippet above set the motor angle to zero degrees. The command `delay(1000);` tells the microcontroller to pause for a second (1000 microseconds) before continuing with the remainder of the `setup()` function. 
 
-Because we run the code with the motor and camera in arbitrary position to start with, the code locks the motor and camera in an unknown angle. We call this unknown position '0 degrees'. We then use the microcontroller and motor driver to turn the motor by a 5 degrees and back by -5 degrees to generate ouf step responses. 
+<span style="color: red"> TODO: Add animated gif/video of locking to illustrate this text block:</span>
 
-TODO: Add animated gif/video of locking.
+Because we run the code with the motor and camera in arbitrary position to start with, the code locks the motor and camera in an unknown angle. We call this unknown position '0 degrees'. We then use the microcontroller and motor driver to turn the motor by a 5 degrees and back by -5 degrees to generate our step responses. The number of step responses to be recorded is set at the beginning of the `loop()` function in [record_open_loop_step_response_data_for_matlab.ino](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino):
+```
+  const uint16_t num_responses= 5;          // record for this many time steps
+  const uint16_t num_time_steps= 200;       // time steps in between angular steps
+  const float angular_step= 3.1416/180.0*5; // 5 deg in rad
+```
+The variable `num_time_steps` defines the number of time steps in between the step signals sent to the motor (200* 5 microseconds= 1 second here). The variable `angular_step` defines the input step signal. We will see that an input signal that corresponds to 5 degrees does not exactly result in a physical turn by 5 degrees. The deviation of the physical angle from the commanded angle will be captured by our transfer function.  
 
- , such as 5 or 10 degrees. The control signals generated by the microcontroller will force the motor into its new position instantaneously, i.e., as fast as posible. 
+<span style="color: red"> TODO: animated gif of the 5 step responses to illustrate the text block above</span>
 
-The resulting motion of the rotor and camera is the desired step response. We will record it with the serial monitor, and then use it identify a transfer function in matlab in the next step.
+The resulting motion of the rotor and camera is the desired step response. We will record it with the serial monitor, and then use it identify a transfer function in matlab in the next step. Carry out these steps to record the step responses:
+ * Open an **empty arduino sketch**. Connect the arduino with the USB cable and upload the empty sketch. Keep the empty sketch, just so you can quickly upload it if something goes wrong.
+ * Make sure the external power supply for the motor driver is set to 7.5V. **Plug in the power supply**.
+ * **Open the arduino sketch** in [record_open_loop_step_response_data_for_matlab.ino](lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino) (remember you should use a local clone of this repository for convenience). Upload it, wait for the upload to complete, observe how the motor is locked, and observe the five step responses.
+ * **Upload the empty arduino sketch**.
+
+ Having set up the hard- and software, you can now record the step responses:
+ * **Open and clear the serial monitor**.
+ * **Upload the sketch** record_open_loop_step_response_data_for_matlab.ino again and record observe how the step responses are recorded by the serial monitor. 
+ * **Upload the empty arduino sketch**.  
+ * **Copy and paste the output from the serial monitor to a text file**. It is convenient to store the text file in lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab and to call it `data_for_matlab.txt`, because this path and filename are used in the matlab scripts explained below. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 

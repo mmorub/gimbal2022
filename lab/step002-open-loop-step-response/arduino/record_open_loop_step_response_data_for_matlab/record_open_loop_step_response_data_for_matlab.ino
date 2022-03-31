@@ -111,20 +111,20 @@ void setup() {
    * Motor driver configuration.
    */
   // power supply voltage [V]
-  driver.voltage_power_supply = driver_voltage_power_supply;
+  driver.voltage_power_supply = driver_voltage_power_supply; // set to e.g. 
+                                               // 7.5V in MyGB2208Motor.h 
   driver.init();
-  // link the motor and the driver
-  motor.linkDriver(&driver); // motor instance required, because setPhaseVoltage is
+  motor.linkDriver(&driver);                   // link the motor and the driver
 
   // set motor constraints and initialize motor
-  motor.voltage_limit = Uqmax;   // [V]
-  motor.velocity_limit = 500/360*2*3.1416; // 500deg/s 
+  motor.voltage_limit = Uqmax;                 // set to e.g. 5V in MyGB2208Motor.h 
+  motor.velocity_limit = motor_velocity_limit; // set to e.g. 500deg/s in MyGB2208Motor.h  
   motor.init();
 
-  // setPhaseVoltage(Uq, Ud, electrical_angle)
   electrical_angle= 0; // rad
-  motor.setPhaseVoltage(Uqmax, 0, electrical_angle);    
-  delay(1000); 
+  motor.setPhaseVoltage(Uqmax, 0, electrical_angle); // syntax is 
+                                               // setPhaseVoltage(Uq, Ud, electrical_angle)
+  delay(1000);                                 // wait 1s
 
   go_clockwise= 1;
 
