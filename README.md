@@ -23,6 +23,7 @@ In a nutshell, these steps are required:
   * [**Design a controller using the transfer function**](#design-a-controller). This requires the methods that you learn about in your automatic control courses.  
   * [**Test the closed-loop system**](#test-the-closed-loop-system). 
   * [**Hack on!**](#hack-on)
+  * [**Test separate README.md**](/lab/step100-test/README.md)
 
 ### Level of the project
 We need to skip a lot of details in order to complete the project in the given time. The explanations given here are supposed to make sense even if you have not completed your first control course. 
