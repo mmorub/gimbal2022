@@ -190,17 +190,19 @@ All steps are explained in the script. Your result should like this [output](htt
 [**Go back to the overview**](#steps) or continue with the next step. 
 
 # Identify a transfer function
-Hello World.
+<span style="color: red"> To be done. </span>
+
+All steps are explained in the matlab script identifyTransferFunctionContinuousTime.mlx. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step002-open-loop-step-response/matlab/html/identifyTransferFunctionContinuousTime.html). Make sure to use your own data, and only use the reference output to check and debug your own code and result. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
 # Design a controller
-Hello World.
+<span style="color: red"> To be done. </span>
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
 # Test the closed-loop system
-Hello World.
+<span style="color: red"> To be done. </span>
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
