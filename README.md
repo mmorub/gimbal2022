@@ -192,7 +192,7 @@ All steps are explained in the script. Your result should like this [output](htt
 # Identify a transfer function
 <span style="color: red"> To be done. </span>
 
-All steps are explained in the matlab script identifyTransferFunctionContinuousTime.mlx. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step002-open-loop-step-response/matlab/html/identifyTransferFunctionContinuousTime.html). Make sure to use your own data, and only use the reference output to check and debug your own code and result. 
+All steps are explained in the matlab script identifyTransferFunctionContinuousTime.mlx. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step003-identify-transfer-function/matlab/html/identifyTransferFunctionContinuousTime.html). Make sure to use your own data, and only use the reference output to check and debug your own code and result. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
