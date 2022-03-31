@@ -177,13 +177,15 @@ The resulting motion of the rotor and camera is the desired step response. We wi
  Having set up the hard- and software, you can now record the step responses:
  * **Open and clear the serial monitor**.
  * **Upload the sketch** record_open_loop_step_response_data_for_matlab.ino again and record observe how the step responses are recorded by the serial monitor. 
- * **Upload the empty arduino sketch**.  
+ * **Upload the empty arduino sketch** and **unplug the power supply**.  
  * **Copy and paste the output from the serial monitor to a text file**. It is convenient to store the text file in lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab and to call it `data_for_matlab.txt`, because this path and filename are used in the matlab scripts explained below. 
 
 ## Visualize the step response in matlab
 **All required code is in lab/step002-open-loop-step-response/matlab/**.
 
-Start matlab and open the script plotStepResponses.mlx. The script reads the data file you just recorded (set the variable `filename` to point to your file). All steps are explained in the script. The output should like this [output](/lab/step002-open-loop-step-response/matlab/html/plotStepResponses.html). Try to use your own data, however, and only use the copy of the ouput provided here for checking and debugging your own result. 
+Start matlab and open the script plotStepResponses.mlx. The script reads the data file you just recorded (set the variable `filename` to point to your file). 
+
+All steps are explained in the script. Your result should like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step002-open-loop-step-response/matlab/html/plotStepResponses.html). Try to use your own data, however, and only use the copy of the ouput provided here for checking and debugging your own result. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
@@ -218,7 +220,7 @@ Matlab runs on Windows, macOS and Linux and an [academic license](https://www.it
 The software we use to program the microcontroller, the Arduino IDE, is also available for Windows, macOS and Linux. It is [free](https://www.arduino.cc/en/software) and open source software. If you want to use your own PC or laptop to connect and program the arduino microcontroller, you have to do so at your own risk. 
 During the hackathon you can use our lab PCs, of course. 
 
-TODO List libraries that need to be installed in the Arduino IDE. 
+<span style="color: red"> TODO List libraries that need to be installed in the Arduino IDE. </span>
 
 ## Github 
 It is convenient to read this documentation on github with your favourite browser. However, you should checkout a local copy of the code to the PC or laptop you are using. This step will be explained in the lab. 
