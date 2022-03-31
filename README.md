@@ -125,7 +125,10 @@ The result of the matlab script should look like this [output](https://raw.githa
 <span style="color: red"> TODO Use pretty phi, t and so on in the live scripts. </span>
 
 # Measure an open-loop step response
-**All required code is in lab/step002-open-loop-step-response**.
+
+## Understand the step response
+
+**All required code is in lab/step002-open-loop-step-response/arduino/**.
 
 <span style="color: red"> TODO: Briefly describe the motor and the driver in this text block:</span>
 
@@ -162,6 +165,9 @@ The variable `num_time_steps` defines the number of time steps in between the st
 
 <span style="color: red"> TODO: animated gif of the 5 step responses to illustrate the text block above</span>
 
+## Record the step response with the arduino
+**All required code is in lab/step002-open-loop-step-response/arduino/**.
+
 The resulting motion of the rotor and camera is the desired step response. We will record it with the serial monitor, and then use it identify a transfer function in matlab in the next step. Carry out these steps to record the step responses:
  * Open an **empty arduino sketch**. Connect the arduino with the USB cable and upload the empty sketch. Keep the empty sketch, just so you can quickly upload it if something goes wrong.
  * Make sure the external power supply for the motor driver is set to 7.5V. **Plug in the power supply**.
@@ -173,6 +179,11 @@ The resulting motion of the rotor and camera is the desired step response. We wi
  * **Upload the sketch** record_open_loop_step_response_data_for_matlab.ino again and record observe how the step responses are recorded by the serial monitor. 
  * **Upload the empty arduino sketch**.  
  * **Copy and paste the output from the serial monitor to a text file**. It is convenient to store the text file in lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab and to call it `data_for_matlab.txt`, because this path and filename are used in the matlab scripts explained below. 
+
+## Visualize the step response in matlab
+**All required code is in lab/step002-open-loop-step-response/matlab/**.
+
+Start matlab and open the script plotStepResponses.mlx.
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
