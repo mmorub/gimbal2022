@@ -11,9 +11,9 @@ The hardware is provided in the lab at RUB. While this is not the focus of the h
 
 <span style="color: red"> TODO: Video </span>
 
-| ![components of the gimbal](readme-files/componentsOfTheGimbal.jpg "Components of the gimbal") |  ![gimbal demo](readme-files/gimbal-hand-left-resized.gif) |
+| ![components of the gimbal](readme-files/componentsOfTheGimbal.jpg "Components of the gimbal") |  ![gimbal demo](readme-files/gimbal-on-and-off-movedByHand-viewFromLeft.gif) |
 |:--:|:--:|
-| *Components of the gimbal* [(*large picture*)](readme-files/componentsOfTheGimbalLarge.jpg) | *Gimbal demo* [(*better video*)](https://youtu.be/QIOnhtqTdQE) |
+| *Components of the gimbal* [(*large picture*)](readme-files/componentsOfTheGimbalLarge.jpg) | *Gimbal demo* [(*better video*)](https://youtu.be/286fnOguq3I) |
 
 
 ## Steps
