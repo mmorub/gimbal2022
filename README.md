@@ -13,7 +13,8 @@ The hardware is provided in the lab at RUB. While this is not the focus of the h
 
 | ![components of the gimbal](readme-files/componentsOfTheGimbal.jpg "Components of the gimbal") |  [![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is Awesome") |
 |:--:|:--:|
-| *Components of the gimbal* | *Gimbal demo*  |
+| *Components of the gimbal* [(*large picture*)](readme-files/componentsOfTheGimbalLarge.jpg) | *Gimbal demo*  |
+
 
 ## Steps
 In a nutshell, these steps are required:
