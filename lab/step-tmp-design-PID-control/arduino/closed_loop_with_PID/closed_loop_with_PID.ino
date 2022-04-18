@@ -14,7 +14,7 @@
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -14.2530;; 
+const int16_t gyro_y_raw_offset= -14.2530;
 const float delta_t= 0.005; // seconds
 const float deg_to_rad= 3.1416/180.0; 
 int16_t gyro_y_raw;
@@ -30,7 +30,7 @@ float electr_angle;
 uint32_t newtime, oldtime, timestep, integrated_jitter, time0;  
 
 float phi, omega;  // angle and angular velocity of camera
-float r, e, e_int, e_diff; // reference angle error, integrated error, d/dt error
+float r, e, e_int, e_diff, e_last; // reference angle error, integrated error, d/dt error
 float electrical_angle; 
 
 void loop(){
@@ -62,16 +62,19 @@ void loop(){
    * Update states and e
    */
   omega= gyro_y_raw* gyroRawTo1000dps; 
-  phi= phi+ omega* delta_t; // integrates omega
-  e= r-phi;                 // error
-  e_int= e_int+ e* delta_t; // integrates e
-  e_diff= -omega;           // remember d/dt e= d/dt phi= -omega, AS LONG AS r IS CONSTANT
+  phi= phi+ omega* delta_t;    // integrates omega
+  e= r-phi;                    // error
+  e_int= e_int+ e* delta_t;    // integrates e
+  e_diff= (e- e_last)/delta_t; // remember d/dt e= d/dt phi= -omega, AS LONG AS r IS CONSTANT
   
   u= kP* e+ kI* e_int+ kD* e_diff; 
   electr_angle= u* deg_to_rad* pole_pair_factor; 
   motor.setPhaseVoltage(Uqmax, 0, electr_angle);    
-  // output for matlab
+
+  // store current error for next round
+  e_last= e; 
   
+  // output for matlab
   Serial.print(newtime- time0);
   Serial.print(',');
   Serial.print(phi);
@@ -164,6 +167,7 @@ void setup() {
   phi= 0.0;   // degrees 
   omega= 0.0; // degrees per second
   e_int= 0.0; // initialize integrated error to 0
+  e_last= 0.0;// stores previous value, start with 0
   
   /**
    * Variables needed to ensure approximate realtime.

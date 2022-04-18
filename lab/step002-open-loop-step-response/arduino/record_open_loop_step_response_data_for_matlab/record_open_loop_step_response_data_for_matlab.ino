@@ -13,7 +13,7 @@
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -82; 
+const int16_t gyro_y_raw_offset= -14.2530; 
 const float delta_t= 0.005; // sampling time in seconds
 int16_t gyro_y_raw;
 
