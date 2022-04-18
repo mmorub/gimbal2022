@@ -15,7 +15,7 @@
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -82; 
+const int16_t gyro_y_raw_offset= -14.2530; 
 const float delta_t= 0.005; // seconds
 const float deg_to_rad= 3.1416/180.0; 
 int16_t gyro_y_raw;
@@ -33,19 +33,6 @@ uint32_t newtime, oldtime, timestep, integrated_jitter, time0;
 float phi, omega;  // angle and angular velocity of camera
 float r, w; // reference angle and integrated error
 float electrical_angle; 
-
-/**
- * System states and their time spans
- */
-enum system_states {
-  first_on= 0, 
-  align,            // get and correct angle to direction of gravity
-  run_controller
-} state; 
-const uint16_t duration_first_on= 200; // number of sampling time steps
-const uint16_t duration_run_controller= 200;
-const uint16_t duration_align= 200;
-const String message_string= "switching to state "; 
 
 void loop(){
 
@@ -172,11 +159,6 @@ void setup() {
   phi= 0.0;   // degrees 
   omega= 0.0; // degrees per second
   w= 0.0;     // degrees
-
-  /**
-   * initial state
-   */
-  state= run_controller; 
   
   /**
    * Variables needed to ensure approximate realtime.
