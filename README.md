@@ -184,7 +184,7 @@ The resulting motion of the rotor and camera is the desired step response. We wi
  * **Open and clear the serial monitor**.
  * **Upload the sketch** [record_open_loop_step_response_data_for_matlab.ino](lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino) again and record observe how the step responses are recorded by the serial monitor. 
  * **Upload the empty arduino sketch** and **unplug the power supply**.  
- * **Copy and paste the output from the serial monitor to a text file**. It is convenient to store the text file in `lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab` and to call it `data_for_matlab.txt`, because this path and filename are used in the matlab scripts explained below. 
+ * **Copy and paste the output from the serial monitor to a text file**. It is convenient to store the text file in `lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab` and to call it `data_for_matlab.txt`, because this path and filename are used in the matlab scripts explained below. If you do not store your own data, you may be using data from the repository that does not fit your motor-camera combination well. So make sure you use your own data!
 
 ## Visualize the step response in matlab
 **All required code is in lab/step002-open-loop-step-response/matlab/**.
@@ -230,7 +230,9 @@ Matlab runs on Windows, macOS and Linux and an [academic license](https://www.it
 The software we use to program the microcontroller, the Arduino IDE, is also available for Windows, macOS and Linux. It is [free](https://www.arduino.cc/en/software) and open source software. If you want to use your own PC or laptop to connect and program the arduino microcontroller, you have to do so at your own risk. 
 During the hackathon you can use our lab PCs, of course. 
 
+<!--
 <span style="color: red"> TODO List libraries that need to be installed in the Arduino IDE. </span>
+-->
 
 ## Github 
 It is convenient to read this documentation on github with your favourite browser. However, you should checkout a local copy of the code to the PC or laptop you are using. This step will be explained in the lab. 
