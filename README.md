@@ -167,12 +167,14 @@ Because we run the code with the motor and camera in arbitrary position to start
 ```
 The variable `num_time_steps` defines the number of time steps in between the step signals sent to the motor (200* 5 microseconds= 1 second here). The variable `angular_step` defines the input step signal. We will see that an input signal that corresponds to 5 degrees does not exactly result in a physical turn by 5 degrees. The deviation of the physical angle from the commanded angle will be captured by our transfer function.  
 
+<!--
 <span style="color: red"> TODO: animated gif of the 5 step responses to illustrate the text block above</span>
+-->
 
 ## Record the step response with the arduino
 **All required code is in lab/step002-open-loop-step-response/arduino/**.
 
-The resulting motion of the rotor and camera is the desired step response. We will record it with the serial monitor, and then use it identify a transfer function in matlab in the next step. Carry out these steps to record the step responses:
+The resulting motion of the rotor and camera is the desired step response. We will record it with the serial monitor, and then use it to find a transfer function that fits this data ("identify a transfer function") in matlab in the next step. Carry out these steps to record the step responses:
  * Open an **empty arduino sketch**. Connect the arduino with the USB cable and upload the empty sketch. Keep the empty sketch, just so you can quickly upload it if something goes wrong.
  * Make sure the external power supply for the motor driver is set to 7.5V. **Plug in the power supply**.
  * **Open the arduino sketch** in [record_open_loop_step_response_data_for_matlab.ino](lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino) (remember you should use a local clone of this repository for convenience). Upload it, wait for the upload to complete, observe how the motor is locked, and observe the five step responses.
@@ -180,9 +182,9 @@ The resulting motion of the rotor and camera is the desired step response. We wi
 
  Having set up the hard- and software, you can now record the step responses:
  * **Open and clear the serial monitor**.
- * **Upload the sketch** record_open_loop_step_response_data_for_matlab.ino again and record observe how the step responses are recorded by the serial monitor. 
+ * **Upload the sketch** `record_open_loop_step_response_data_for_matlab.ino` again and record observe how the step responses are recorded by the serial monitor. 
  * **Upload the empty arduino sketch** and **unplug the power supply**.  
- * **Copy and paste the output from the serial monitor to a text file**. It is convenient to store the text file in lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab and to call it `data_for_matlab.txt`, because this path and filename are used in the matlab scripts explained below. 
+ * **Copy and paste the output from the serial monitor to a text file**. It is convenient to store the text file in `lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab` and to call it `data_for_matlab.txt`, because this path and filename are used in the matlab scripts explained below. 
 
 ## Visualize the step response in matlab
 **All required code is in lab/step002-open-loop-step-response/matlab/**.
