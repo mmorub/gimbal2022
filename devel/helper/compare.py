@@ -1,18 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Wed May  4 17:57:12 2022
-
-@author: mmo
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May  4 17:52:46 2022
-
-@author: mmo
-"""
 
 import filecmp
 
@@ -34,4 +21,6 @@ filenames= ["../../lab/step099-design-controller-with-integrator/arduino/closed_
 # loop over all but first file, compare to first file
 referenceFile= filenames[0];
 for currentFile in filenames[1:-1]:
-    filecmp.cmp(referenceFile, currentFile)
+    if filecmp.cmp(referenceFile, currentFile)== False:
+        print("file "+ referenceFile+ " and "+ currentFile+ "differ")
+        
