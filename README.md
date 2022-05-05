@@ -7,13 +7,10 @@ It is our goal to determine a transfer function for the motor-camera combination
 
 The hardware is provided in the lab at RUB. While this is not the focus of the hackathon, you can also build the hardware yourself. You could explore how to use a smaller controller and motor driver, how to run the hardware on batteries, or 3d-print a nicer stand, for example. 
 
-<span style="color: red"> TODO: Photo of components </span>
-
-<span style="color: red"> TODO: Video </span>
 
 | ![components of the gimbal](readme-files/componentsOfTheGimbal.jpg "Components of the gimbal") |  ![gimbal demo](readme-files/gimbal-kachel.gif) |
 |:--:|:--:|
-| *Components of the gimbal* [(*large picture*)](readme-files/componentsOfTheGimbalLarge.jpg) | *Gimbal demo* [(*better video*)](https://youtu.be/286fnOguq3I) |
+| *Components of the gimbal* [(*large picture*)](readme-files/componentsOfTheGimbalLarge.jpg) | *Gimbal demo* [(*better video*)](https://youtu.be/X2nZriD9WRU) |
 
 
 ## Steps
@@ -122,9 +119,11 @@ The result of the matlab script should look like this [output](https://raw.githa
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
+<!---
 <span style="color: red"> TODO Reduce existing script just so it does not integrate the angular velocity. </span>
 
 <span style="color: red"> TODO Use pretty phi, t and so on in the live scripts. </span>
+-->
 
 # Measure an open-loop step response
 
