@@ -1,2 +1,0 @@
- 
-step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab has newer .h files than other dirs
