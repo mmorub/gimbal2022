@@ -21,7 +21,6 @@ In a nutshell, these steps are required:
   * [**Design a controller using the transfer function**](#design-a-controller). This requires the methods that you learn about in your automatic control courses.  
   * [**Test the closed-loop system**](#test-the-closed-loop-system). 
   * [**Hack on!**](#hack-on)
-  * [**Test separate README.md**](/lab/step100-test/README.md)
 
 ### Level of the project
 We need to skip a lot of details in order to complete the project in the given time. The explanations given here are supposed to make sense even if you have not completed your first control course. 
@@ -31,14 +30,14 @@ You will also see that it is not the point to find a model that is as precise as
 You will get to know matlab and learn a bit about microcontroller programming for digital control. The microcontroller and sensor board used here are used in many maker projects (in other words, they were never designed for industrial use). Rest assured that everything you learn here about microcontrollers and sensors also applies to their industrial variants.  
 
 # Understand and test the sensor 
-**All required code is in lab/step001-test-gyroscope/**. 
+**All required code is in lab/step001-test-gyroscope/ for this step**. 
 
 We use a gyroscope to measure the angular velocity by which the camera is turned. The particular gyroscope used here is a [MEMS Gyroscope](https://en.wikipedia.org/wiki/Vibrating_structure_gyroscope#MEMS_gyroscopes), which was [originally designed for use in devices like smartphones](https://invensense.tdk.com/products/motion-tracking/6-axis/mpu-6050/). In our case the sensor comes on a little prototyping board shown in the picture of the [components](#introduction).
 
 ## Record gyroscope data with the arduino 
 **All required code is in lab/step001-test-gyroscope/arduino**.
 
-Let's start by turning the camera on the gimbal by hand and measuring the angle with the gyroscope. You need to use the Arduino IDE and its serial monitor for this. You also need Matlab in the next step. Everything you need is installed on the PCs in the lab. If you are using your own PC or laptop, check the brief description of the [prerequisites](#prerequisites).
+Let's start by turning the camera on the gimbal by hand and measuring the angle with the gyroscope. You need to use the Arduino [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment) and its serial monitor for this. You also need Matlab in the next step. Everything you need is installed on the PCs in the lab. If you are using your own PC or laptop, check the brief description of the [prerequisites](#prerequisites).
 
 You **do not need to plug in the separate power supply** for these steps yet. The separate power supply is for the motor, which is still turned off here:
 
@@ -48,7 +47,7 @@ You **do not need to plug in the separate power supply** for these steps yet. Th
 
  * Now **open the arduino serial monitor**. Upload the sketch again and verify the serial monitor is printing lines for the duration set in the sketch. Try to find this duration by reading the sketch. We print for a few seconds and then stop, just so the serial monitor will show a finite set of data for use in matlab. 
 
- * Upload the sketch and, once it starts running, **turn the camera in its case by hand**. Try to turn it by a defined angle such as 90 degrees and observe that the numbers shown in the serial monitor change as you move the camera. You will only see the numbers run across the screen without being able make sense out of them at this point. We will record them for use in matlab in the next step. 
+ * Upload the sketch and, once it starts running, **turn the camera in its case by hand**. Try to turn it by a defined angle (such as 90 degrees) and observe that the numbers shown in the serial monitor change as you move the camera. You will only see the numbers run across the screen without being able to make sense out of them at this point. We will record them for use in matlab in the next step. 
 
  Once you completed the steps above, you are ready to **record data for use in matlab**:
 
@@ -56,12 +55,12 @@ You **do not need to plug in the separate power supply** for these steps yet. Th
   * Clear the serial monitor.
   * Upload our arduino sketch, wait for the Arduino IDE to display "Upload completed" and the serial monitor to start printing, then turn the camera by a defined angle. For example, turn it 90 degrees clockwise and 90 degrees back. 
   * Select the output in the serial monitor (try double clicking and using CTRL-A to select all) and paste it into your favourite text editor.
-  * Save to a text file. It is convenient to save it to gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/data_for_matlab.txt, because this filename is accessed by the matlab script used below. 
+  * Save to a text file. It is convenient to save it to `gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/data_for_matlab.txt`, because this filename is accessed by the matlab script used below. 
 
 ## Analyse recorded data in matlab 
 **All required code is in lab/step001-test-gyroscope/matlab**.
 
-Start matlab and open the script check_gyroscope_data.mlx. The script loads the data from the text file you just created. You will have to adjust the script so it finds your data file. If you have not created a data text file in the previous step, the script will use the one provided on the repo. Make sure you work with your own data! 
+Start matlab and open the script `check_gyroscope_data.mlx`. The script loads the data from the text file you just created. You will have to adjust the script so it finds your data file. If you have not created a data text file in the previous step, the script may use one provided on the repo. Make sure you work with your own data! 
 
 All steps taken by the matlab script are explained in the script itself. Make sure you understand the following points:
 
