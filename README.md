@@ -189,7 +189,7 @@ The resulting motion of the rotor and camera is the desired step response. We wi
 ## Visualize the step response in matlab
 **All required code is in lab/step002-open-loop-step-response/matlab/**.
 
-Start matlab and open the script plotStepResponses.mlx. The script reads the data file you just recorded (set the variable `filename` to point to your file). 
+Start matlab and open the script `plotStepResponses.mlx`. The script reads the data file you just recorded (set the variable `filename` to point to your file). 
 
 All steps are explained in the script. Your result should like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step002-open-loop-step-response/matlab/html/plotStepResponses.html). Try to use your own data, however, and only use the copy of the ouput provided here for checking and debugging your own result. 
 
