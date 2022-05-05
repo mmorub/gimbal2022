@@ -130,7 +130,9 @@ The result of the matlab script should look like this [output](https://raw.githa
 
 **All required code is in lab/step002-open-loop-step-response/arduino/**.
 
+<!--
 <span style="color: red"> TODO: Briefly describe the motor and the driver in this text block:</span>
+-->
 
 We use the motor for the first time in this step. When we turn on the motor, it will lock into a random position. The motor is turned on in the setup-function in the arduino code. The first few lines prepare a `driver` and a `motor` instance. Details are not important at this point, but you can see that the microcontroller needs to know the supply voltage provided to the driver, and we set a voltage and a velocity limit. Note that the values of `driver_voltage_power_supply`, `Uqmax` and `motor_velocity_limit` are set in the file [MyGB2208Motor.h](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/MyGB2208Motor.h):
 ```
@@ -153,7 +155,9 @@ We use the motor for the first time in this step. When we turn on the motor, it 
 
 The last lines in the code snippet above set the motor angle to zero degrees. The command `delay(1000);` tells the microcontroller to pause for a second (1000 microseconds) before continuing with the remainder of the `setup()` function. 
 
+<!--
 <span style="color: red"> TODO: Add animated gif/video of locking to illustrate this text block:</span>
+-->
 
 Because we run the code with the motor and camera in arbitrary position to start with, the code locks the motor and camera in an unknown angle. We call this unknown position '0 degrees'. We then use the microcontroller and motor driver to turn the motor by a 5 degrees and back by -5 degrees to generate our step responses. The number of step responses to be recorded is set at the beginning of the `loop()` function in [record_open_loop_step_response_data_for_matlab.ino](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino):
 ```
