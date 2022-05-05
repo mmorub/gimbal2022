@@ -41,7 +41,7 @@ Let's start by turning the camera on the gimbal by hand and measuring the angle 
 
 You **do not need to plug in the separate power supply** for these steps yet. The separate power supply is for the motor, which is still turned off here:
 
- * **Open the arduino sketch** in gimbal2022/lab/step001-test-gyroscope/ in your Arduino IDE. **Connect the arduino** with the USB cable and check if you can compile and upload your code. **Do not plug in the separate power supply**. 
+ * **Open the arduino sketch** in `gimbal2022/lab/step001-test-gyroscope/` in your Arduino IDE. **Connect the arduino** with the USB cable and check if you can compile and upload your code. **Do not plug in the separate power supply**. 
 
  * You should always **have an empty arduino sketch open** that you can upload immediately to reset the arduino in case anything goes wrong. You can create an empty sketch by clicking File->New in the Arduino IDE. **Practise uploading an empty sketch** just to be sure. 
 
@@ -110,9 +110,9 @@ where the offset is set in the header of the arduino sketch in the line
 ```
 The offset was determined for one of the sensors used in the lab. It needs to be adjusted for the particular sensor you are using. Carry out these steps to do so:
 * Clear the serial monitor.
-* Run the arduino sketch in lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/ again, but **do not move the camera this time**.
-* Copy and paste the result in the arduino serial monitor to a text editor and **store it in a new file**. It is convenient to name this file gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/calibration_data_for_matlab.txt, because this filename is used in the matlab script.
-* **Run the matlab script** check_gyroscope_offset.mlx to determine the offset.
+* Run the arduino sketch in `lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/` again, but **do not move the camera this time**.
+* Copy and paste the result in the arduino serial monitor to a text editor and **store it in a new file**. It is convenient to name this file `gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/calibration_data_for_matlab.txt`, because this filename is used in the matlab script.
+* **Run the matlab script** `check_gyroscope_offset.mlx` to determine the offset.
 The result of the matlab script should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_offset.html). Use this sample output and the sample data files only for debugging your own script.  
 * Set the offset in check_gyroscope_data.mlx, and run the test again. Check again if the output rembles this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html). Again, use this output only for debugging and make sure you complete your own run.
 
