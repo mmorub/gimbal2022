@@ -60,13 +60,15 @@ You **do not need to plug in the separate power supply** for these steps yet. Th
 ## Analyse recorded data in matlab 
 **All required code is in lab/step001-test-gyroscope/matlab**.
 
-Start matlab and open the script `check_gyroscope_data.mlx`. The script loads the data from the text file you just created. You will have to adjust the script so it finds your data file. If you have not created a data text file in the previous step, the script may use one provided on the repo. Make sure you work with your own data! 
+Start matlab and open the script `check_gyroscope_data.mlx`. The script loads the data from the text file you just created. You may have to adjust the path to the file in the script so it finds your data file. Remember matlab attempts to resolve the path from the current directory. 
+
+If you have not created a data text file in the previous step, the script may use one provided on the github repository. Make sure you work with your own data! The gimbal is probably not going to work if you use the data from the repository, because it belongs to a different sensor, motor, and camera. 
 
 All steps taken by the matlab script are explained in the script itself. Make sure you understand the following points:
 
 * The gyroscope measures **angular velocity**. Because we want to control the angle of the camera, we need to **integrate the angular velocity** to determine the angle. 
-* Because we measure the angular velocity at **discrete points in time**, the integration is approximated by a summation. The arduino is programmed to take a measurement every 5 microseconds. This is the sampling time, which is called `delta_t` in the code. 
-* The arduino carries out the summation (the approximate integration) in these lines, where `phi` and `omega` refer to the angle and the angular velocity, respectively:
+* Because we measure the angular velocity at **discrete points in time**, the integration is approximated by a summation. The arduino is programmed to take a measurement every 5 milliseconds. This is the sampling time, which is called `delta_t` in the code. 
+* Both the arduino code from the last step and the matlab code from this step carry out the summation (the approximate integration). The arduino carries out the summation in the following lines, where `phi` and `omega` refer to the angle and the angular velocity, respectively.
 (We will treat `gyro_y_raw_offset` below.)
 ```
   // measure phi and integrate omega with the arduino
