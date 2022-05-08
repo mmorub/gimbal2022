@@ -41,7 +41,7 @@ Let's start by turning the camera on the gimbal by hand and measuring the angle 
 
 You **do not need to plug in the separate power supply** for these steps yet. The separate power supply is for the motor, which is still turned off here:
 
- * **Open the arduino sketch** in `gimbal2022/lab/step001-test-gyroscope/` in your Arduino IDE. **Connect the arduino** with the USB cable and check if you can compile and upload your code. **Do not plug in the separate power supply**. 
+ * **Open the arduino sketch** in `gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/` in your Arduino IDE. **Connect the arduino** with the USB cable and check if you can compile and upload your code. **Do not plug in the separate power supply**. 
 
  * You should always **have an empty arduino sketch open** that you can upload immediately to reset the arduino in case anything goes wrong. You can create an empty sketch by clicking File->New in the Arduino IDE. **Practise uploading an empty sketch** just to be sure. 
 
