@@ -101,7 +101,7 @@ The output of the matlab script is shown [here](https://raw.githack.com/mmorub/g
 
 ## Calibrate and repeat
 
-Gyroscopes suffer from a constant offset. We need to determine this offset and subtract it everytime we take a measurement with the gyroscope. This happens in the line 
+Gyroscopes suffer from a constant offset. We need to determine this offset and subtract it everytime we take a measurement with the gyroscope. This happens in the arduino sketch `record_gyroscope_data_for_matlab.ino` in the line 
 ```
   gyro_y= gyro_y_raw- gyro_y_raw_offset;
 ```
@@ -155,7 +155,7 @@ We use the motor for the first time in this step. When we turn on the motor, it 
 ```
 (from [setup() in record_open_loop_step_response_data_for_matlab.ino](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino))
 
-The last lines in the code snippet above set the motor angle to zero degrees. The command `delay(1000);` tells the microcontroller to pause for a second (1000 microseconds) before continuing with the remainder of the `setup()` function. 
+The last lines in the code snippet above set the motor angle to zero degrees. The command `delay(1000);` tells the microcontroller to pause for a second (1000 milliseconds) before continuing with the remainder of the `setup()` function. 
 
 <!--
 <span style="color: red"> TODO: Add animated gif/video of locking to illustrate this text block:</span>
@@ -167,7 +167,7 @@ Because we run the code with the motor and camera in arbitrary position to start
   const uint16_t num_time_steps= 200;       // time steps in between angular steps
   const float angular_step= 3.1416/180.0*5; // 5 deg in rad
 ```
-The variable `num_time_steps` defines the number of time steps in between the step signals sent to the motor (200* 5 microseconds= 1 second here). The variable `angular_step` defines the input step signal. We will see that an input signal that corresponds to 5 degrees does not exactly result in a physical turn by 5 degrees. The deviation of the physical angle from the commanded angle will be captured by our transfer function.  
+The variable `num_time_steps` defines the number of time steps in between the step signals sent to the motor (200* 5 milliseconds= 1 second here). The variable `angular_step` defines the input step signal. We will see that an input signal that corresponds to 5 degrees does not exactly result in a physical turn by 5 degrees. The deviation of the physical angle from the commanded angle will be captured by our transfer function.  
 
 <!--
 <span style="color: red"> TODO: animated gif of the 5 step responses to illustrate the text block above</span>
@@ -179,7 +179,12 @@ The variable `num_time_steps` defines the number of time steps in between the st
 The resulting motion of the rotor and camera is the desired step response. We will record it with the serial monitor, and then use it to find a transfer function that fits this data ("identify a transfer function") in matlab in the next step. Carry out these steps to record the step responses:
  * Open an **empty arduino sketch**. Connect the arduino with the USB cable and upload the empty sketch. Keep the empty sketch, just so you can quickly upload it if something goes wrong.
  * Make sure the external power supply for the motor driver is set to 7.5V. **Plug in the power supply**.
- * **Open the arduino sketch** in [record_open_loop_step_response_data_for_matlab.ino](lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino) (remember you should use a local clone of this repository for convenience). Upload it, wait for the upload to complete, observe how the motor is locked, and observe the five step responses.
+ * **Open the arduino sketch** in [record_open_loop_step_response_data_for_matlab.ino](lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino) (remember you should use a local clone of this repository for convenience).
+ * Remember to adjust the gyro offset to the value determined in the previous step. The line you need look like this one, where the value must be adjusted to your offset. 
+```
+ const int16_t gyro_y_raw_offset= -34.4430; // set to your value
+ ```
+ * **Upload the arduino sketch**, wait for the upload to complete, observe how the motor is locked, and observe the five step responses.
  * **Upload the empty arduino sketch**.
 
  Having set up the hard- and software, you can now record the step responses:
@@ -200,7 +205,7 @@ All steps are explained in the script. Your result should like this [output](htt
 # Identify a transfer function
 **Code for this section is in lab/step003-identify-transfer-function/matlab/**.
 
-<span style="color: red"> To be done. </span>
+This step reuses the data recorded in the previous step. Therefore, we do not need to run any arduino sketch, but can start with matlab right away. 
 
 All steps are explained in the matlab script identifyTransferFunctionContinuousTime.mlx. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step003-identify-transfer-function/matlab/html/identifyTransferFunctionContinuousTime.html). Make sure to use your own data, and only use the reference output to check and debug your own code and result. 
 
