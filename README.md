@@ -116,7 +116,12 @@ The offset was determined for one of the sensors used in the lab. It needs to be
 * Copy and paste the result in the arduino serial monitor to a text editor and **store it in a new file**. It is convenient to name this file `gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/calibration_data_for_matlab.txt`, because this filename is used in the matlab script.
 * **Run the matlab script** `check_gyroscope_offset.mlx` to determine the offset.
 The result of the matlab script should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_offset.html). Use this sample output and the sample data files only for debugging your own script.  
-* Set the offset in `check_gyroscope_data.mlx`, and run the test again. Check again if the output rembles this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html). Again, use this output only for debugging and make sure you complete your own run.
+* Set the offset in the arduino sketch `record_gyroscope_data_for_matlab.ino` in the line already pointed out above:
+```
+  // Variables needed for polling gyrometers.
+  const float gyro_y_raw_offset= -82.768; 
+```
+Then run the test again by running the sketch with the corrected offset by turning the motor by hand in a defined fashion again. Run the matlab script `check_gyroscope_data.mlx` again and check again if it resembles the [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html). The output was generated for a turn by 90 degrees and 90 degrees back. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
