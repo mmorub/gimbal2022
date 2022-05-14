@@ -121,7 +121,7 @@ The result of the matlab script should look like this [output](https://raw.githa
   // Variables needed for polling gyrometers.
   const float gyro_y_raw_offset= -82.768; 
 ```
-Then run the test again by running the sketch with the corrected offset by turning the motor by hand in a defined fashion again. Run the matlab script `check_gyroscope_data.mlx` again and check again if it resembles the [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html). The output was generated for a turn by 90 degrees and 90 degrees back. 
+* Then run the test again by running the sketch with the corrected offset by turning the motor by hand in a defined fashion again. Run the matlab script `check_gyroscope_data.mlx` again and check again if it resembles the [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html). The output was generated for a turn by 90 degrees and 90 degrees back. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
