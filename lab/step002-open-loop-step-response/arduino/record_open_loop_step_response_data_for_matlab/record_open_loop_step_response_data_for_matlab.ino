@@ -13,7 +13,7 @@
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -7.5090;
+const int16_t gyro_y_raw_offset= -34.3080; 
 const float delta_t= 0.005; // sampling time in seconds
 int16_t gyro_y_raw;
 
@@ -35,7 +35,7 @@ void loop(){
 
   const uint16_t num_responses= 5; // record for this many time steps
   const uint16_t num_time_steps= 200;         // in between angular steps
-  const float angular_step= 3.1416/180.0*5; // 5 deg in rad
+  const float angular_step= -3.1416/180.0*5; // 5 deg in rad
   
   /**
    * Needed to ensure approximate realtime, do not alter.
