@@ -238,6 +238,11 @@ These three constants are illustrated in the following figure.
 |:--:|
 | *Parameters to be determined from the step response data*  |
 
+
+| <img src="readme-files/ConstructPT2.gif " alt="2nd-prder system parameters" width="50%"/> |
+|:--:|
+| *Parameters to be determined from the step response data*  |
+
 The three constants $y_\mathrm{inf}$, $y_\mathrm{max}$ and $t_\mathrm{rise}$ **determine the three constants that uniquely define the second-order system**
 
 $G(s)={\Large \frac{K\omega_0^2}{s^2+ 2D \omega_0 s+ \omega_0^2}}$.
