@@ -234,11 +234,6 @@ The graphical analysis requires to determine **three constants**,
   * and the **rise time $t_\mathrm{rise}$**. 
 These three constants are illustrated in the following figure. 
 
-| ![2nd-order system parameters](readme-files/ConstructPT2.gif "2nd-order system parameters") |
-|:--:|
-| *Parameters to be determined from the step response data*  |
-
-
 | <img src="readme-files/ConstructPT2.gif " alt="2nd-prder system parameters" width="50%"/> |
 |:--:|
 | *Parameters to be determined from the step response data*  |
