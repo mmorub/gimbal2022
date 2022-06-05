@@ -236,7 +236,7 @@ These three constants are illustrated in the following figure.
 
 | ![2nd-order system parameters](readme-files/ConstructPT2.png "2nd-order system parameters") |
 |:--:|
-| *Parameters $\, t_\mathrm{rise}$, $y_\mathrm{inf}$, $y_\mathrm{max}$*  |
+| *Parameters to be determined from the step response data*  |
 
 The three constants $y_\mathrm{inf}$, $y_\mathrm{max}$ and $t_\mathrm{rise}$ **determine the three constants that uniquely define the second-order system**
 
