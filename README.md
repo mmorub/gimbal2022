@@ -16,16 +16,26 @@ The hardware is provided in the lab at RUB. While this is not the focus of the h
 ## Steps
 In a nutshell, these steps are required:
   * [**Understand and test the sensor**](#understand-and-test-the-sensor). We use a gyroscope that transmits its signal to a microcontroller. 
-  * [**Measure an open-loop step-response**](#measure-an-open-loop-step-response) with the sensor. We force the camera to turn by a certain angle (say, 5 or 10 degrees) with a motor, and we control this motor by sending commands from the microcontroller to a motor driver. Recording the sensor signal with the microcontroller as the camera turns then yields the step response. 
-  * [**Find a transfer function that describes the step-response**](#identify-a-transfer-function). The transfer function will describe how the signal sent to the motor driver turns into ("is transferred into") the angle by which the camera is actually turned. The transfer function is our system model. 
+  * [**Measure an open-loop step-response**](#measure-an-open-loop-step-response) with the sensor. We force the camera to turn by a certain angle (say, 5, 10 or 20 degrees) with a motor, and we control this motor by sending commands from the microcontroller to a motor driver. Recording the sensor signal with the microcontroller as the camera turns then yields the step response. 
+  * **Find a transfer function that describes the step-response** We do this twice,      
+    * First we [**construct a transfer function by hand**](#construct-a-transfer-function-by-hand), 
+    * then with [**built-in matlab functions**](#identify-a-transfer-function). 
+  
+    The transfer function will describe how the signal sent to the motor driver turns into ("is transferred into") the angle by which the camera is actually turned. The transfer function is our system model or "digital twin". 
   * [**Design a controller using the transfer function**](#design-a-controller). This requires the methods that you learn about in your automatic control courses.  
   * [**Test the closed-loop system**](#test-the-closed-loop-system). 
+
+  To be done.
   * [**Hack on!**](#hack-on)
 
-### Level of the project
-We need to skip a lot of details in order to complete the project in the given time. The explanations given here are supposed to make sense even if you have not completed your first control course. 
-Try to understand what the step response and transfer function are good for, try to distinguish the open-loop and closed-loop systems from one another, and try to understand that the case treated here is a disturbance rejection. 
-You will also see that it is not the point to find a model that is as precise as possible, but one that is fit for its purpose. 
+## Level of the project
+We need to skip a lot of details. The explanations given here are supposed to make sense even if you have not completed your first control course. 
+Try to understand 
+  * what the **step response** and **transfer function** are good for, 
+  * try to **distinguish the open-loop and closed-loop systems** from one another, 
+  * and try to understand that the case treated here is a **disturbance rejection**. 
+
+  You will also see that it is not the point to find a model that is as precise as possible, but one that is fit for its purpose. 
 
 You will get to know matlab and learn a bit about microcontroller programming for digital control. The microcontroller and sensor board used here are used in many maker projects (in other words, they were never designed for industrial use). Rest assured that everything you learn here about microcontrollers and sensors also applies to their industrial variants.  
 
@@ -51,25 +61,25 @@ You **do not need to plug in the separate power supply** for these steps yet. Th
 
  Once you completed the steps above, you are ready to **record data for use in matlab**:
 
-  * Upload an empty arduino sketch.
-  * Clear the serial monitor.
-  * Upload our arduino sketch, wait for the Arduino IDE to display "Upload completed" and the serial monitor to start printing, then turn the camera by a defined angle. For example, turn it 90 degrees clockwise and 90 degrees back. 
-  * Select the output in the serial monitor (try double clicking and using CTRL-A to select all) and paste it into your favourite text editor.
-  * Save to a text file. It is convenient to save it to `gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/data_for_matlab.txt`, because this filename is accessed by the matlab script used below. It is safe to overwrite this file if it already exists. (The original copy can be recovered from the github repository.)
+  * Upload an **empty arduino sketch**.
+  * **Clear the serial monitor**.
+  * **Upload our arduino sketch**, wait for the Arduino IDE to display "Upload completed" and the serial monitor to start printing, then **turn the camera by a defined angle** of your choice. For example, turn it 90 degrees clockwise and 90 degrees back. 
+  * **Select the output in the serial monitor** (try double clicking and using CTRL-A to select all) and paste it into your favourite text editor.
+  * **Save to a text file**. It is convenient to save it to `gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/data_for_matlab.txt`, because this filename is accessed by the matlab script used below. It is safe to overwrite this file if it already exists. (The original copy can be recovered from the github repository.)
 
 ## Analyse recorded data in matlab 
 **All required code is in lab/step001-test-gyroscope/matlab**.
 
-Start matlab and open the script `check_gyroscope_data.mlx`. The script loads the data from the text file you just created. You may have to adjust the path to the file in the script so it finds your data file. Remember matlab attempts to resolve the path from the current directory. 
+Start matlab and open the script `check_gyroscope_data.mlx`. The script loads the data from the text file you just created. You may have to **adjust the path to the file in the script so it finds your data file**. Remember matlab attempts to resolve the path from the current directory. 
 
-If you have not created a data text file in the previous step, the script may use one provided on the github repository. Make sure you work with your own data! The gimbal is probably not going to work if you use the data from the repository, because it belongs to a different sensor, motor, and camera. 
+If you have not created a data text file in the previous step, the script may use one provided on the github repository. **Make sure you work with your own data!** The gimbal is probably not going to work if you use the data from the repository, because it belongs to a different sensor, motor, and camera. 
 
-All steps taken by the matlab script are explained in the script itself. Make sure you understand the following points:
+All steps taken by the matlab script are explained in the matlab live script itself. Make sure you understand the following points:
 
 * The gyroscope measures **angular velocity**. Because we want to control the angle of the camera, we need to **integrate the angular velocity** to determine the angle. 
 * Because we measure the angular velocity at **discrete points in time**, the integration is approximated by a summation. The arduino is programmed to take a measurement every 5 milliseconds. This is the sampling time, which is called `delta_t` in the code. 
-* Both the arduino code from the last step and the matlab code from this step carry out the summation (the approximate integration). The arduino carries out the summation in the following lines, where `phi` and `omega` refer to the angle and the angular velocity, respectively.
-(We will treat `gyro_y_raw_offset` below.)
+* Both the arduino code from the last step and the matlab code from this step carry out the summation (the approximate integration). **The arduino carries out the summation in the following lines**, where `phi` and `omega` refer to the angle and the angular velocity, respectively.
+(The purpose of `gyro_y_raw_offset` still needs to be explained. This is done below.)
 ```
   // measure phi and integrate omega with the arduino
 
@@ -83,7 +93,7 @@ All steps taken by the matlab script are explained in the script itself. Make su
   omega= gyro_y* gyroRawTo1000dps; 
   phi= phi+ omega* delta_t; // integrates omega
 ```
-* The arduino prints the angle `phi` and angular velocity `omega` to the serial monitor. This way, they are both available after reading the data file in matlab. For the sake of testing, we also calculate `phi` independently in matlab by integrating `omega` recorded by the arduino in matlab. This happens in these lines in the matlab code:
+* The arduino prints the angle `phi` and angular velocity `omega` to the serial monitor. This way, they are both available after reading the data file in matlab. **For testing and debugging, we also calculate `phi` independently in matlab** by integrating `omega` recorded by the arduino in matlab. This happens in these lines in the matlab code:
 ```
   # integrate omega in matlab
 
@@ -97,11 +107,11 @@ All steps taken by the matlab script are explained in the script itself. Make su
   title("phi, integrated from omega in matlab");
   xlabel("t in seconds");
 ```
-The output of the matlab script is shown [here](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html) for a turn by 90 degrees in one direction and 90 degrees back. 
+The output of the matlab script is shown [here](https://raw.githack.com/mmorub/gimbal2022/main/lab/step001-test-gyroscope/matlab/html/check_gyroscope_data.html) for a turn by 90 degrees in one direction and 90 degrees back. Use this output for reference and debugging your own steps. Make sure you use your own data! 
 
 ## Calibrate and repeat
 
-Gyroscopes suffer from a constant offset. We need to determine this offset and subtract it everytime we take a measurement with the gyroscope. This happens in the arduino sketch `record_gyroscope_data_for_matlab.ino` in the line 
+Gyroscopes suffer from a constant offset. We need to **determine this offset and subtract it** everytime we take a measurement with the gyroscope. This happens in the arduino sketch `record_gyroscope_data_for_matlab.ino` in the line 
 ```
   gyro_y= gyro_y_raw- gyro_y_raw_offset;
 ```
@@ -110,7 +120,7 @@ where the offset is set in the header of the arduino sketch in the line
   // Variables needed for polling gyrometers.
   const float gyro_y_raw_offset= -82.768; 
 ```
-The offset was determined for one of the sensors used in the lab. It needs to be adjusted for the particular sensor you are using. Carry out these steps to do so:
+The offset used in the code lines above was determined for one of the sensors used in the lab. **You need to adjust it for the particular sensor you are using**. Carry out these steps to do so:
 * Clear the serial monitor.
 * Run the arduino sketch in `lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/` again, but **do not move the camera this time**.
 * Copy and paste the result in the arduino serial monitor to a text editor and **store it in a new file**. It is convenient to name this file `gimbal2022/lab/step001-test-gyroscope/arduino/record_gyroscope_data_for_matlab/calibration_data_for_matlab.txt`, because this filename is used in the matlab script.
