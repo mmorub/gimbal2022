@@ -18,10 +18,10 @@ In a nutshell, these steps are required:
   * [**Understand and test the sensor**](#understand-and-test-the-sensor). We use a gyroscope that transmits its signal to a microcontroller. 
   * [**Measure an open-loop step-response**](#measure-an-open-loop-step-response) with the sensor. We force the camera to turn by a certain angle (say, 5, 10 or 20 degrees) with a motor, and we control this motor by sending commands from the microcontroller to a motor driver. Recording the sensor signal with the microcontroller as the camera turns then yields the step response. 
   * **Find a transfer function that describes the step-response** We do this twice,      
-    * First we [**construct a transfer function by hand**](#construct-a-transfer-function-by-hand), 
-    * then with [**built-in matlab functions**](#identify-a-transfer-function). 
+    * first we [**construct a transfer function by hand**](#construct-a-transfer-function-by-hand), 
+    * then with [**identify a transfer function**](#identify-a-transfer-function) with built-in matlab functions. 
   
-    The transfer function will describe how the signal sent to the motor driver turns into ("is transferred into") the angle by which the camera is actually turned. The transfer function is our system model or "digital twin". 
+    The transfer function will describe how the signal sent to the motor driver turns into ("is transferred into") the angle by which the camera is actually turned. The transfer function is our system model or "digital twin". Note that we are constructing our model, the transfer function, from data only instead of deriving a differential equation from balance equations.
   * [**Design a controller using the transfer function**](#design-a-controller). This requires the methods that you learn about in your automatic control courses.  
   * [**Test the closed-loop system**](#test-the-closed-loop-system). 
 
@@ -151,7 +151,10 @@ The result of the matlab script should look like this [output](https://raw.githa
 <span style="color: red"> TODO: Briefly describe the motor and the driver in this text block:</span>
 -->
 
-We use the motor for the first time in this step. When we turn on the motor, it will lock into a random position. The motor is turned on in the setup-function in the arduino code. The first few lines prepare a `driver` and a `motor` instance. Details are not important at this point, but you can see that the microcontroller needs to know the supply voltage provided to the driver, and we set a voltage and a velocity limit. Note that the values of `driver_voltage_power_supply`, `Uqmax` and `motor_velocity_limit` are set in the file [MyGB2208Motor.h](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/MyGB2208Motor.h):
+We **use the motor for the first time** in this step. When we turn on the motor, it will lock into a random position. The motor is turned on in the `setup()`-function in the arduino code. **Make sure you find this function in the arduino code**! 
+(Look for `void setup()` in [record_open_loop_step_response_data_for_matlab.ino](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino).) 
+
+The first few lines of the `setup()`-function prepare a `driver` and a `motor` instance. Details of the C-code are not important at this point, but you can see that the microcontroller needs to know the supply voltage provided to the driver, and we set a **voltage limit** and a **velocity limit** to protect the motor and driver. Note that the values of `driver_voltage_power_supply`, `Uqmax` and `motor_velocity_limit` are set in the file [MyGB2208Motor.h](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/MyGB2208Motor.h):
 ```
   driver.voltage_power_supply = driver_voltage_power_supply; // set to e.g. 
                                                // 7.5V in MyGB2208Motor.h 
@@ -176,13 +179,13 @@ The last lines in the code snippet above set the motor angle to zero degrees. Th
 <span style="color: red"> TODO: Add animated gif/video of locking to illustrate this text block:</span>
 -->
 
-Because we run the code with the motor and camera in arbitrary position to start with, the code locks the motor and camera in an unknown angle. We call this unknown position '0 degrees'. We then use the microcontroller and motor driver to turn the motor by a 5 degrees and back by -5 degrees to generate our step responses. The number of step responses to be recorded is set at the beginning of the `loop()` function in [record_open_loop_step_response_data_for_matlab.ino](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino):
+Because we run the code with the motor and camera in arbitrary position to start with, **the code locks the motor and camera in an unknown angle**. We call this unknown position '0 degrees'. We then use the microcontroller and motor driver to turn the motor by a 5 degrees and back by -5 degrees (or a similar value) to **generate our step responses**. The number of step responses to be recorded is set at the beginning of the `loop()` function in [record_open_loop_step_response_data_for_matlab.ino](/lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino):
 ```
   const uint16_t num_responses= 5;          // record for this many time steps
   const uint16_t num_time_steps= 200;       // time steps in between angular steps
   const float angular_step= 3.1416/180.0*5; // 5 deg in rad
 ```
-The variable `num_time_steps` defines the number of time steps in between the step signals sent to the motor (200* 5 milliseconds= 1 second here). The variable `angular_step` defines the input step signal. We will see that an input signal that corresponds to 5 degrees does not exactly result in a physical turn by 5 degrees. The deviation of the physical angle from the commanded angle will be captured by our transfer function.  
+The variable `num_time_steps` defines the **number of time steps in between the step signals** sent to the motor (200* 5 milliseconds= 1 second here). The variable `angular_step` defines the input step signal. We will see that an input signal that corresponds to, for example, 5 degrees **does not necessarily result in a physical turn by exactely 5 degrees**. The deviation of the physical angle from the commanded angle will be captured by our transfer function. Your motor driver combination may also turn the motor by -5 degrees when you command +5 degrees. **This can be captured by a factor -1 in the transfer function**. 
 
 <!--
 <span style="color: red"> TODO: animated gif of the 5 step responses to illustrate the text block above</span>
@@ -191,11 +194,11 @@ The variable `num_time_steps` defines the number of time steps in between the st
 ## Record the step response with the arduino
 **All required code is in lab/step002-open-loop-step-response/arduino/**.
 
-The resulting motion of the rotor and camera is the desired step response. We will record it with the serial monitor, and then use it to find a transfer function that fits this data ("identify a transfer function") in matlab in the next step. Carry out these steps to record the step responses:
- * Open an **empty arduino sketch**. Connect the arduino with the USB cable and upload the empty sketch. Keep the empty sketch, just so you can quickly upload it if something goes wrong.
+The resulting motion of the rotor and camera is the desired step response. We will record it with the serial monitor, and then use it to find a transfer function that fits this data ("identify a transfer function") in matlab in the next step. Carry out these steps to **record the step responses**:
+ * Open an **empty arduino sketch**. Connect the arduino with the USB cable and upload the empty sketch. **Keep the empty sketch, just so you can quickly upload it if something goes wrong**.
  * Make sure the external power supply for the motor driver is set to 7.5V. **Plug in the power supply**.
  * **Open the arduino sketch** in [record_open_loop_step_response_data_for_matlab.ino](lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino) (remember you should use a local clone of this repository for convenience).
- * Remember to adjust the gyro offset to the value determined in the previous step. The line you need look like this one, where the value must be adjusted to your offset. 
+ * **Remember to adjust the gyro offset** to the value determined in the previous step. The line you need look like this one, where the value must be adjusted to your offset. 
 ```
  const int16_t gyro_y_raw_offset= -34.4430; // set to your value
  ```
@@ -206,23 +209,75 @@ The resulting motion of the rotor and camera is the desired step response. We wi
  * **Open and clear the serial monitor**.
  * **Upload the sketch** [record_open_loop_step_response_data_for_matlab.ino](lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino) again and record observe how the step responses are recorded by the serial monitor. 
  * **Upload the empty arduino sketch** and **unplug the power supply**.  
- * **Copy and paste the output from the serial monitor to a text file**. It is convenient to store the text file in `lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab` and to call it `data_for_matlab.txt`, because this path and filename are used in the matlab scripts explained below. If you do not store your own data, you may be using data from the repository that does not fit your motor-camera combination well. So make sure you use your own data!
+ * **Copy and paste the output from the serial monitor to a text file**. 
+ 
+    It is convenient to store the text file in `lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab` and to call it `data_for_matlab.txt`, because this path and filename are used in the matlab scripts explained below. If you do not store your own data, you may be using data from the repository that does not fit your motor-camera combination well. So make sure you use your own data!
 
 ## Visualize the step response in matlab
 **All required code is in lab/step002-open-loop-step-response/matlab/**.
 
-Start matlab and open the script `plotStepResponses.mlx`. The script reads the data file you just recorded (set the variable `filename` to point to your file). 
+Start matlab and open the matlab live script `plotStepResponses.mlx`. The script reads the data file you just recorded (set the variable `filename` to point to your file). 
 
-All steps are explained in the script. Your result should like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step002-open-loop-step-response/matlab/html/plotStepResponses.html). Try to use your own data, however, and only use the copy of the ouput provided here for checking and debugging your own result. 
+All steps are explained in the script `plotStepResponses.mlx`. Your result should like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step002-open-loop-step-response/matlab/html/plotStepResponses.html). Try to use your own data, however, and only use the copy of the ouput provided here for checking and debugging your own result. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
+# Construct a transfer function by hand
+**Code for this section is in lab/step003-construct-transfer-function/matlab/**.
+
+This step reuses the step response data recorded in the previous section [**"Measure an open-loop step-response"**](#measure-an-open-loop-step-response). Therefore, we do not need to run any arduino sketch, but can **start with matlab right away**.
+
+Start matlab and **open the matlab live script** `constructTransferFunctionContinuousTimeByHand.mlx`. The script describes the graphical analysis of a step response (more specifically, the underdamped stable second-order step response we found here). 
+The graphical analysis requires to determine **three constants**, 
+  * the **new steady-state of the output $y_\mathrm{inf}$**,
+  * the **maximum overshoot of the ouput $y_\mathrm{max}$**, 
+  * and the **rise time $t_\mathrm{rise}$**. 
+These three constants are illustrated in the following figure. 
+
+| ![2nd-order system parameters](readme-files/ConstructPT2.png "2nd-order system parameters") |
+|:--:|
+| *Parameters $\, t_\mathrm{rise}$, $y_\mathrm{inf}$, $y_\mathrm{max}$*  |
+
+The three constants $y_\mathrm{inf}$, $y_\mathrm{max}$ and $t_\mathrm{rise}$ **determine the three constants that uniquely define the second-order system**
+
+$G(s)={\Large \frac{K\omega_0^2}{s^2+ 2D \omega_0 s+ \omega_0^2}}$.
+
+The constants of this transfer function are
+  * the **gain** 
+  
+    $K= y_\mathrm{inf}/u_0$, 
+
+    where $u_0$ is the amplitude of the input step,
+
+  * the **damping constant** 
+  
+    $D= \left( 1+\left({\Large\frac{\pi}{\ln r}}\right)^2 \right)^{-1/2}$ 
+    where $r= {\Large \frac{y_\mathrm{max}-y_\mathrm{inf}}{y_\mathrm{inf}}}$
+
+
+  * the **resonance frequency** 
+  
+    $\omega_0= {\Large \frac{\pi- \arccos D}{t_\mathrm{rise} \sqrt{1- D^2}}}$. 
+
+**Use the matlab script** `constructTransferFunctionContinuousTimeByHand.mlx` **to determine the constants** $y_\mathrm{inf}$, $y_\mathrm{max}$ and $t_\mathrm{rise}$ from the step response we recorded. Then use these constants to determine $K$, $D$ and $\omega_0$, **and ultimately $G(s)$** in the matlab script. 
+
+Your output should look like this. Once again, **make sure to use your own data!**
+
+**To be done**
+
+[**Go back to the overview**](#steps) or continue with the next step. 
+
+
 # Identify a transfer function
-**Code for this section is in lab/step003-identify-transfer-function/matlab/**.
+**Code for this section is in lab/step004-identify-transfer-function/matlab/**.
 
-This step reuses the data recorded in the previous step. Therefore, we do not need to run any arduino sketch, but can start with matlab right away. 
+The transfer function determined in the previous step is a valid model for our gimbal. There exist **other methods for constructing transfer functions** from measured data than the graphical one used in the previous section. These methods are collectively referred to as **"identification methods"**, because they are used to identify a transfer function (or a similar model such as a differential equation) from data. These methods are similar to machine learning methods in that they use gradient-based optimization methods for adjusting unknown model parameters to measured data. (There also exist machine learning methods for the same purpose, but for the case treated here they do not outperform identification methods.)
 
-All steps are explained in the matlab script identifyTransferFunctionContinuousTime.mlx. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step003-identify-transfer-function/matlab/html/identifyTransferFunctionContinuousTime.html). Make sure to use your own data, and only use the reference output to check and debug your own code and result. 
+**In this section**, we apply a built-in matlab method to identify another transfer function. Roughly speaking, this method is better than the graphical one used in the previous section, because the **method used here uses all data points** of the measured step response. If you revisit the previous section you will see that **the graphical method only uses three data points**, one each to find the parameters $y_\mathrm{inf}$, $t_\mathrm{rise}$ and $y_\mathrm{max}$. 
+
+We reuse the step response data recorded in the section [**"Measure an open-loop step-response"**](#measure-an-open-loop-step-response) again in this section. We can again start with matlab right away. 
+
+All steps are explained in the matlab script `identifyTransferFunctionContinuousTime.mlx`. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step003-identify-transfer-function/matlab/html/identifyTransferFunctionContinuousTime.html). **Make sure to use your own data**, and only use the reference output to check and debug your own code and result. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
