@@ -263,19 +263,17 @@ The constants of this transfer function are
 
 Your output should look like this. Once again, **make sure to use your own data!**
 
-**To be done**
-
 [**Go back to the overview**](#steps) or continue with the next step. 
 
 
 # Identify a transfer function
 **Code for this section is in lab/step004-identify-transfer-function/matlab/**.
 
-The transfer function determined in the previous step is a valid model for our gimbal. There exist **other methods for constructing transfer functions** from measured data than the graphical one used in the previous section. These methods are collectively referred to as **"identification methods"**, because they are used to identify a transfer function (or a similar model such as a differential equation) from data. These methods are similar to machine learning methods in that they use gradient-based optimization methods for adjusting unknown model parameters to measured data. (There also exist machine learning methods for the same purpose, but for the case treated here they do not outperform identification methods.)
+There exist **other methods for constructing transfer functions** from measured data than the graphical one used in the previous section. These methods are collectively referred to as **"identification methods"**, because they are used to identify a transfer function (or a similar model such as a differential equation) from data. These methods are similar to machine learning methods in that they use gradient-based optimization methods for adjusting unknown model parameters to measured data. (There also exist machine learning methods for the same purpose, but for the case treated here they do not outperform identification methods.)
 
-**In this section**, we apply a built-in matlab method to identify another transfer function. Roughly speaking, this method is better than the graphical one used in the previous section, because the **method used here uses all data points** of the measured step response. If you revisit the previous section you will see that **the graphical method only uses three data points**, one each to find the parameters $y_\mathrm{inf}$, $t_\mathrm{rise}$ and $y_\mathrm{max}$. 
+**In this section**, we apply a built-in matlab method to identify another transfer function. This method is better than the graphical one used in the previous section, because the **method used here uses all data points** of the measured step response. If you revisit the previous section you will see that **the graphical method only uses three data points**, one each to find the parameters $y_\mathrm{inf}$, $t_\mathrm{rise}$ and $y_\mathrm{max}$. 
 
-We reuse the step response data recorded in the section [**"Measure an open-loop step-response"**](#measure-an-open-loop-step-response) again in this section. We can again start with matlab right away. 
+We reuse the step response data recorded in the section [**"Measure an open-loop step-response"**](#measure-an-open-loop-step-response) again in this section. Therefore, we can again start with matlab right away. 
 
 All steps are explained in the matlab script `identifyTransferFunctionContinuousTime.mlx`. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step003-identify-transfer-function/matlab/html/identifyTransferFunctionContinuousTime.html). **Make sure to use your own data**, and only use the reference output to check and debug your own code and result. 
 
