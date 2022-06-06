@@ -269,13 +269,13 @@ Your output should look like this. Once again, **make sure to use your own data!
 # Identify a transfer function
 **Code for this section is in lab/step004-identify-transfer-function/matlab/**.
 
-There exist **other methods for constructing transfer functions** from measured data than the graphical one used in the previous section. These methods are collectively referred to as **"identification methods"**, because they are used to identify a transfer function (or a similar model such as a differential equation) from data. These methods are similar to machine learning methods in that they use gradient-based optimization methods for adjusting unknown model parameters to measured data. (There also exist machine learning methods for the same purpose, but for the case treated here they do not outperform identification methods.)
+There exist **other methods for constructing transfer functions** from measured data than the graphical one used in the previous section. These methods are collectively referred to as **"identification methods"**, because they are used to identify a transfer function (or a similar model such as a differential equation) from data. These methods are similar to machine learning methods in that they use gradient-based optimization methods for adjusting unknown model parameters to measured data. (There also exist machine learning methods for the same purpose, but for the case treated here machine learning methods do not outperform identification methods.)
 
 **In this section**, we apply a built-in matlab method to identify another transfer function. This method is better than the graphical one used in the previous section, because the **method used here uses all data points** of the measured step response. If you revisit the previous section you will see that **the graphical method only uses three data points**, one each to find the parameters $y_\mathrm{inf}$, $t_\mathrm{rise}$ and $y_\mathrm{max}$. 
 
 We reuse the step response data recorded in the section [**"Measure an open-loop step-response"**](#measure-an-open-loop-step-response) again in this section. Therefore, we can again start with matlab right away. 
 
-All steps are explained in the matlab script `identifyTransferFunctionContinuousTime.mlx`. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step003-identify-transfer-function/matlab/html/identifyTransferFunctionContinuousTime.html). **Make sure to use your own data**, and only use the reference output to check and debug your own code and result. 
+All steps are explained in the matlab script `identifyTransferFunctionContinuousTime.mlx`. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step004-identify-transfer-function/matlab/html/identifyTransferFunctionContinuousTime.html). **Make sure to use your own data**, and only use the reference output to check and debug your own code and result. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
@@ -290,9 +290,21 @@ All steps are explained in the matlab script `identifyTransferFunctionContinuous
 [**Go back to the overview**](#steps) or continue with the next step. 
 
 # Hack on!
-Up to this point, the hackathon has been more like a lab. If you make it here, feel free to write your own code that combines all the steps described so far. You could, for example, have your own code first run the gyroscope calibration, then determine the direction of gravity, align the camera, and keep it aligned until the gimbal is turned off. 
+Up to this point, the hackathon has been more like a lab. If you make it here, feel free to experiment. Here are some ideas:
 
-Maybe you prefer to improve the gimbal stand instead or construct your own multi-axis gimbal starting from here. Let us know if you want to contribute!
+* Write your own **arduino sketch that combines all the steps described so far**: 
+  * First run the gyroscope calibration (with the arduino, without matlab), 
+  * then determine the direction of gravity (with the acceleration sensor that is available in the MPU), 
+  * align the camera to the down direction, 
+  * and keep it aligned until the gimbal is turned off. 
+
+* Construct a **better gimbal stand**. (Freecad code for the existing one can be provided upon request. It's not polished yet, so it is not in the repository...) 
+
+* Construct a **gimbal stand for the yaw-axis** (Starting from the existing freecad code again.)
+
+* Construct your own **2- or 3-axis gimbal**. (Starting from the freecad code again.)
+
+* **Compare the two models**. We constructed a transfer function graphically in step003 and identified one with built-in matlab methods in step004. Compare the two results to the original data by calculating the [summed least squares error](https://en.wikipedia.org/wiki/Least_squares#Problem_statement) for both simulated step responses. 
 
 [**Go back to the overview.**](#steps)
 
