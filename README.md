@@ -275,7 +275,8 @@ There exist **other methods for constructing transfer functions** from measured 
 
 We reuse the step response data recorded in the section [**"Measure an open-loop step-response"**](#measure-an-open-loop-step-response) again in this section. Therefore, we can again start with matlab right away. 
 
-All steps are explained in the matlab script `identifyTransferFunctionContinuousTime.mlx`. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step004-identify-transfer-function/matlab/html/identifyTransferFunctionContinuousTime.html). **Make sure to use your own data**, and only use the reference output to check and debug your own code and result. 
+All steps are explained in the matlab script `identifyTransferFunctionContinuousTime.mlx`. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step004-identify-transfer-function/matlab/html/identifyTransferFunctionContinuousTime.html). 
+**Make sure to use your own data**, and only use the reference output to check and debug your own code and result. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
