@@ -264,7 +264,8 @@ The constants of this transfer function are
 
 **Use the matlab script** `constructTransferFunctionContinuousTimeByHand.mlx` **to determine the constants** $y_\mathrm{inf}$, $y_\mathrm{max}$ and $t_\mathrm{rise}$ from the step response we recorded. Then use these constants to determine $K$, $D$ and $\omega_0$, **and ultimately $G(s)$** in the matlab script. 
 
-Your output should look like this. Once again, **make sure to use your own data!**
+Your result should like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step003-construct-transfer-function-by-hand/matlab/html/constructTransferFunctionContinuousTimeByHand.html).
+The interesting results are at the end of the file. Once again, **make sure to use your own data!**
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
