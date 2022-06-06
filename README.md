@@ -275,18 +275,23 @@ There exist **other methods for constructing transfer functions** from measured 
 
 We reuse the step response data recorded in the section [**"Measure an open-loop step-response"**](#measure-an-open-loop-step-response) again in this section. Therefore, we can again start with matlab right away. 
 
-All steps are explained in the matlab script `identifyTransferFunctionContinuousTime.mlx`. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step004-identify-transfer-function/matlab/html/identifyTransferFunction.html). 
+**All steps are explained in the matlab script** `identifyTransferFunctionContinuousTime.mlx`. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step004-identify-transfer-function/matlab/html/identifyTransferFunction.html). 
 **Make sure to use your own data**, and only use the reference output to check and debug your own code and result. 
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
 # Design a controller
-<span style="color: red"> To be done. </span>
+**Code required for this section is in lab/step005-design-PID-control/matlab**.
+
+The matlab script `design_controller.mlx` introduces a **PID controller** both in the time domain and frequency domain. It recalls the meaning of the **poles** of the closed-loop transfer function and then **determines the three parameters of the PID controller** that result in useful poles of the closed-loop system by **pole placement**.
+
+All steps are explained in the matlab script `design_controller.mlx`. Your result should look like this [output](https://raw.githack.com/mmorub/gimbal2022/main/lab/step005-design-PID-control/matlab/html/design_controller.html). 
+
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
 # Test the closed-loop system
-<span style="color: red"> To be done. </span>
+**All required code is in lab/lab/step005-design-PID-control/arduino**.
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
