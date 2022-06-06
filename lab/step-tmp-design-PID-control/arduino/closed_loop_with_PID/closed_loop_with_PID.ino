@@ -1,7 +1,4 @@
-/* 
- * Integrate gyroscope signal to monitor the angle by which the camera is turned by hand. 
- * Print gyroscope signal and integrated angle to serial monitor for import into matlab. 
- *   
+/*  
  * For registers like PWR_MGMT_1 of the MPU6050 see
  * Datasheets/Invensense2013-MPU-6050-Register-Map. "MPU_" is prepended 
  * to all registers. 
