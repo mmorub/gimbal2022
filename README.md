@@ -15,24 +15,27 @@ The hardware is provided in the lab at RUB. While this is not the focus of the h
 
 ## Steps
 In a nutshell, these steps are required:
-  * [**Understand and test the sensor**](#understand-and-test-the-sensor). We use a gyroscope that transmits its signal to a microcontroller. 
+  * [**Understand and test the sensor**](#understand-and-test-the-sensor). 
+  We use a gyroscope that transmits its signal to a microcontroller. 
   * [**Measure an open-loop step-response**](#measure-an-open-loop-step-response) with the sensor. We force the camera to turn by a certain angle (say, 5, 10 or 20 degrees) with a motor, and we control this motor by sending commands from the microcontroller to a motor driver. Recording the sensor signal with the microcontroller as the camera turns then yields the step response. 
   * **Find a transfer function that describes the step-response** We do this twice,      
     * first we [**construct a transfer function by hand**](#construct-a-transfer-function-by-hand), 
     * then with [**identify a transfer function**](#identify-a-transfer-function) with built-in matlab functions. 
   
     The transfer function will describe how the signal sent to the motor driver turns into ("is transferred into") the angle by which the camera is actually turned. The transfer function is our system model or "digital twin". Note that we are constructing our model, the transfer function, from data only instead of deriving a differential equation from balance equations.
-  * [**Design a controller using the transfer function**](#design-a-controller). This requires the methods that you learn about in your automatic control courses.  
-  * [**Test the closed-loop system**](#test-the-closed-loop-system). 
-
-  To be done.
+  * [**Design a controller using the transfer function**](#design-a-PID-controller). This requires the methods that you learn about in your automatic control courses. All steps are explained in the matlab script that belongs to this step.  
+  * [**Test the controller**](#test-the-controller). 
+  Finally, you can take the controller equations and the controller parameters and implement them in the C-code run on the microcontroller. You will see that the controller rejects disturbances, i.e., it moves the camera back into its original position if the gimbal is moved by hand. 
   * [**Hack on!**](#hack-on)
+  See the list of possible next steps in this section. 
+  Let us know if you have suggestions for other steps. 
 
 ## Level of the project
 We need to skip a lot of details. The explanations given here are supposed to make sense even if you have not completed your first control course. 
 Try to understand 
   * what the **step response** and **transfer function** are good for, 
   * try to **distinguish the open-loop and closed-loop systems** from one another, 
+  * try to understand how **pole placement** is used to achieve the desired behaviour of the controlled system,
   * and try to understand that the case treated here is a **disturbance rejection**. 
 
   You will also see that it is not the point to find a model that is as precise as possible, but one that is fit for its purpose. 
@@ -280,7 +283,7 @@ We reuse the step response data recorded in the section [**"Measure an open-loop
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
-# Design a controller
+# Design a PID controller
 **Code required for this section is in lab/step005-design-PID-control/matlab**.
 
 The matlab script `design_controller.mlx` introduces a **PID controller** both in the time domain and frequency domain. It recalls the meaning of the **poles** of the closed-loop transfer function and then **determines the three parameters of the PID controller** that result in useful poles of the closed-loop system by **pole placement**.
@@ -290,8 +293,77 @@ All steps are explained in the matlab script `design_controller.mlx`. Your resul
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
-# Test the closed-loop system
-**All required code is in lab/lab/step005-design-PID-control/arduino**.
+# Test the controller
+**Code required for this section is in lab/lab/step005-design-PID-control/arduino/closed_loop_with_PID**.
+
+Note that there exist two subdirectories, ```closed_loop_with_PID``` and ```closed_loop_with_PID_aligned```. **Use the one without ```aligned``` first**. The other one is treated in the subsection ["Two improvements"](#two-improvements) below. 
+
+## Setting the controller parameters in the microcontroller code
+We introduced a PID controller and determined its three parameters, $k_P$, $k_I$ and $k_D$, in the last section. 
+The controller determines the input $u(t)$ that is to be sent to the motor at the current time $t$. It does so by adding up three contributions
+
+$u(t)= k_P\left(r(t)-\varphi(t)\right)+ k_I \int_0^t\left(r(\tau)- \varphi(\tau)\right) d\tau+ k_D \frac{d}{dt} \left(r(t)- \varphi(t)\right)$,
+
+which are proportional to the error $e(t)$, proportional to the integral of the error $\int_0^t e(\tau)d\tau$, and proportional to the derivative $\frac{d}{dt} e(t)$ of the error. Note that the ideas behind all this are explained in the matlab script in more detail.
+
+All quantities, the input $u(t)$ and the error $e(t)$ and its integral and derivative, are defined for all times $t$. This is usually refereed to as **"continous time"**. In other words, the quantities are defined in **continuous time**. 
+
+The microcontroller, however, operates at a sampling frequency, or in **"discrete time"**.  This implies all variables defined on the microcontroller are updated only at discrete steps $\Delta t$, $2\Delta t$, $3\Delta t$, and so on, where $\Delta t$ is the reciprocal of the clock frequency of the microcontroller. Consequently, **we need to approximate $u(t)$, $e(t)$, and the time-integral $\int_0^t e(\tau) d\tau$ and time-derivative $\frac{d}{dt} e(t)$**. The integral and derivative can be approximated by a sum and a finite difference, respectively. The corresponding lines in the C-code for the arduino read as follows:
+
+```
+ /** 
+  * Update states and e
+  */
+ omega= gyro_y_raw* gyroRawTo1000dps; 
+ phi= phi+ omega* delta_t;    // integrates omega approx.
+ e= r-phi;                    // error
+ e_int= e_int+ e* delta_t;    // integrates e approx.
+ e_diff= (e- e_last)/delta_t; // approximates d/dt e
+```
+The first line is used to convert the raw signal from the gyroscope to degrees-per-second. The second line is needed to convert the angular velocity to the desired angle. (Remember the gyroscope measures angular velocities, not angles.)
+The remaining lines carry out the approximations of the continuous-time quantities by their discrete-time counterparts. 
+
+Once the approximate values for $e(t)$ and its integral and derivative are available in `e`, `e_int` and `e_diff`, respectively, we can calculate the input signal. This happens in the line
+
+```
+ u= kP* e+ kI* e_int+ kD* e_diff; 
+```
+in the C-code for the arduino. Note this is the discrete-time approximation of the equation for $u(t)$ stated above. Furthermore note that **the controller parameters `kP`, `kI` and `kD` in the code must be set to the values you determined in the previous step!**
+This is done in the lines
+```
+  /**
+   * Controller parameters from matlab
+  */
+  const float kI= 1.090369480652143e+02, kP= 2.324321600420766, kD= 0.028549937992665; 
+```
+which appear at the top of the ```loop()``` function in ```closed_loop_with_PID.ino```. **Make sure to use your own controller parameters!** The controller may not work if you use the values that are set in the code. 
+
+After you set the controller parameters to the values you calculated with matlab, compile and upload the arduino sketch. **The gimbal should now reject disturbances**, i.e., it should compensate for any rotation that you impose by moving it with your hand. 
+
+[**Go back to the overview**](#steps) or continue with the next step. 
+
+## Two improvements
+
+### **Improvement one: align the gimbal before turning the controller on**
+
+The arduino code ```closed_loop_with_PID_aligned.ino``` (now with "aligned" in the filename") implements the same controller structure. In addition, it alings the gimbal so the camera is upright before the controller is turned on. 
+
+The angle of the camera before turning the controller on is determined with the new little function ```get_angle_to_gravity()```, which uses the acceleration sensor of the MPU. Try to find where this function is used in ```closed_loop_with_PID_aligned.ino```.
+
+The camera is turned to the upright position by setting the reference input to the closed-loop $r$ to the negative of the angle returned by ```get_angle_to_gravity()```. This happens in the line
+```
+  r= -get_angle_to_gravity(MPU_ADDRESS);     // degrees
+```
+in the ```setup()``` function. 
+
+[**Go back to the overview**](#steps) or continue with the next step. 
+
+### **Improvement two: slower but smoother controller**
+
+The second part of the matlab script ```design_controller.mlx``` explains how to modify the closed loop to result in a simpler closed-loop transfer function. While this part requires some additional calculations it results in a controller that is just as simple as the PID controller, but results in a arguably nicer closed-loop step response. 
+
+Save ```closed_loop_with_PID_aligned.ino``` to a new directory and try to modify the lines that implement the PID controller to implement the new closed loop. 
+
 
 [**Go back to the overview**](#steps) or continue with the next step. 
 
