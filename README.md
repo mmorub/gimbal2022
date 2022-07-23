@@ -201,7 +201,7 @@ The resulting motion of the rotor and camera is the desired step response. We wi
  * Open an **empty arduino sketch**. Connect the arduino with the USB cable and upload the empty sketch. **Keep the empty sketch, just so you can quickly upload it if something goes wrong**.
  * Make sure the external power supply for the motor driver is set to 7.5V. **Plug in the power supply**.
  * **Open the arduino sketch** in [record_open_loop_step_response_data_for_matlab.ino](lab/step002-open-loop-step-response/arduino/record_open_loop_step_response_data_for_matlab/record_open_loop_step_response_data_for_matlab.ino) (remember you should use a local clone of this repository for convenience).
- * **Remember to adjust the gyro offset** to the value determined in the previous step. The line you need look like this one, where the value must be adjusted to your offset. 
+ * **Remember to adjust the gyro offset** to the value determined in the previous step. The line you need looks like this one, where the value must be adjusted to your offset. 
 ```
  const int16_t gyro_y_raw_offset= -34.4430; // set to your value
  ```
