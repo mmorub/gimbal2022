@@ -13,7 +13,7 @@
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -34.3080; 
+const int16_t gyro_y_raw_offset= -37.3310; 
 const float delta_t= 0.005; // sampling time in seconds
 int16_t gyro_y_raw;
 
@@ -59,7 +59,7 @@ void loop(){
   phi= phi+ omega* delta_t; // integrates omega
   
   // Output for matlab
-  if (responses_counter< num_responses){
+  if (responses_counter<= num_responses){
     Serial.print(newtime- time0);
     Serial.print(',');
     Serial.print(phi);
@@ -69,7 +69,7 @@ void loop(){
   time_step_counter++; 
 
   // Check if next step is due. 
-  if (time_step_counter== num_time_steps && responses_counter< num_responses) {
+  if (time_step_counter== num_time_steps && responses_counter<= num_responses) {
     time_step_counter= 0; 
     responses_counter++; 
     if (go_clockwise==1){
@@ -79,7 +79,7 @@ void loop(){
     }
     go_clockwise= !go_clockwise;
     motor.setPhaseVoltage(Uqmax, 0, electrical_angle); // setPhaseVoltage(Uq, Ud, electrical_angle)
-  } else if (responses_counter== num_responses){
+  } else if (responses_counter> num_responses){
     motor.disable(); 
   }
 
