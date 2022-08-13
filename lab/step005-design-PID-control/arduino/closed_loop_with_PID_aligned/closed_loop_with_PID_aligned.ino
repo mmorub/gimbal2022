@@ -45,7 +45,8 @@ void loop(){
   */
 //  const float kP= 2.4558, kI= 114.0083, kD= 0.0310; 
 //  const float kP= 2.6840, kI= 121.2507, kD= 0.0331; 
-  const float kP= 1.1216, kI= 51.6569, kD= 0.0242; 
+//  const float kP= 1.1216, kI= 51.6569, kD= 0.0242; 
+const float kP= 5.7e-4, kI= 15.6065, kD= 0.0154; 
   /**
    * Needed to ensure approximate realtime, do not alter.
    * Wait until current timestep is over.

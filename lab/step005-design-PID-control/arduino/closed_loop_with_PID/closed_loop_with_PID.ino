@@ -11,7 +11,7 @@
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -14.2530;
+const int16_t gyro_y_raw_offset= -37.3310;
 const float delta_t= 0.005; // seconds
 const float deg_to_rad= 3.1416/180.0; 
 int16_t gyro_y_raw;
@@ -38,8 +38,8 @@ void loop(){
   /**
    * Controller parameters from matlab
   */
-  const float kI= 1.090369480652143e+02, kP= 2.324321600420766, kD= 0.028549937992665; 
-  
+  const float kP= 2.6840, kI= 121.2507, kD= 0.0331; 
+
   /**
    * Needed to ensure approximate realtime, do not alter.
    * Wait until current timestep is over.
