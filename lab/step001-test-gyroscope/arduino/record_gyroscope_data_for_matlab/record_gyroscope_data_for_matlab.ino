@@ -12,7 +12,7 @@
 #include <Wire.h>
 
 // Variables needed for polling gyrometers.
-const float gyro_y_raw_offset=  -34.3080; // 5: -32.1502; // 4: -7.5090; // 3: -15.6291; // 2: 17.2283; // 1: -34.4430; 
+const float gyro_y_raw_offset= -42.6310; // 5: -32.1502; // 4: -7.5090; // 3: -15.6291; // 2: 17.2283; // 1: -34.4430; 
 const float delta_t= 0.005; // seconds
 int16_t gyro_y_raw, gyro_y; 
 
