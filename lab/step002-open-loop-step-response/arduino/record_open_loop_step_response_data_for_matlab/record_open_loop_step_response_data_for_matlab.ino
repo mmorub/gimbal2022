@@ -62,9 +62,9 @@ void loop(){
   if (responses_counter<= num_responses){
     Serial.print(newtime- time0);
     Serial.print(',');
-    Serial.print(phi);
+    Serial.print(phi, 16);
     Serial.print(',');
-    Serial.println(omega);
+    Serial.println(omega, 16);
   }
   time_step_counter++; 
 
@@ -73,9 +73,9 @@ void loop(){
     time_step_counter= 0; 
     responses_counter++; 
     if (go_clockwise==1){
-      electrical_angle= electrical_angle+ angular_step* pole_pair_factor; 
+      electrical_angle= electrical_angle+ angular_step* ((float) pole_pair_number); 
     } else {
-      electrical_angle= electrical_angle- angular_step* pole_pair_factor; 
+      electrical_angle= electrical_angle- angular_step* ((float) pole_pair_number); 
     }
     go_clockwise= !go_clockwise;
     motor.setPhaseVoltage(Uqmax, 0, electrical_angle); // setPhaseVoltage(Uq, Ud, electrical_angle)
