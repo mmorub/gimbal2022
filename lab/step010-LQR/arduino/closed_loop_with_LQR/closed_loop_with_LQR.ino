@@ -1,42 +1,43 @@
-/* 
- * Step back and forth by 5 degrees and record data with serial monitor. 
- *   
+/*  
  * For registers like PWR_MGMT_1 of the MPU6050 see
  * Datasheets/Invensense2013-MPU-6050-Register-Map. "MPU_" is prepended 
  * to all registers. 
  */
  
 #include "MyMPU6050Sensor.h"
-#include "MyGB2208Motor.h" 
+#include "MyGB2208Motor.h"
 #include "get_gyro_y.h"
 #include <Wire.h>
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -8.7754; 
-const float delta_t= 0.005; // sampling time in seconds
+const int16_t gyro_y_raw_offset= -7.6220;
+const float delta_t= 0.005; // seconds
+const float deg_to_rad= 3.1416/180.0; 
 int16_t gyro_y_raw;
 
 // BLDC motor & driver instance
 BLDCMotor motor = BLDCMotor(pole_pair_number);
 BLDCDriver3PWM driver = BLDCDriver3PWM(11, 10, 9, 6, 5, 3); // BLDCDriver3PWM(pwmA, pwmB, pwmC, Enable(optional));
 
+float electr_angle;  
 
 // Variables needed to ensure approximate realtime in loop().
 uint32_t newtime, oldtime, timestep, integrated_jitter, time0;  
-uint16_t time_step_counter; // counts time steps
-uint16_t responses_counter; // counts step responses
 
 float phi, omega;  // angle and angular velocity of camera
+// delete this: float r, e, e_int, e_diff, e_last; // reference angle error, integrated error, d/dt error
 float electrical_angle; 
-bool go_clockwise; // used to control direction of step
 
 void loop(){
 
-  const uint16_t num_responses= 5; // record for this many time steps
   const uint16_t num_time_steps= 200;         // in between angular steps
-  const float angular_step= -3.1416/180.0*5; // 5 deg in rad
-  
+  float u; 
+
+  /**
+   * Controller parameters from matlab
+  */
+  const float kP= 1.1216, kI= 51.6569, kD= 0.0242;
   /**
    * Needed to ensure approximate realtime, do not alter.
    * Wait until current timestep is over.
@@ -49,39 +50,31 @@ void loop(){
    * end real time control 
    */
 
-  // Measure omega with gyrometer, 
-  // integrate phi. 
+  // Measure omega with gyrometer
   gyro_y_raw= get_gyro_y(MPU_ADDRESS); 
   gyro_y_raw= gyro_y_raw- gyro_y_raw_offset;
 
-  // Update states
-  omega= gyro_y_raw* gyroRawTo1000dps; 
-  phi= phi+ omega* delta_t; // integrates omega
-  
-  // Output for matlab
-  if (responses_counter<= num_responses){
-    Serial.print(newtime- time0);
-    Serial.print(',');
-    Serial.print(phi);
-    Serial.print(',');
-    Serial.println(omega);
-  }
-  time_step_counter++; 
+  /** 
+   * Update states and e
+   */
+  omega= gyro_y_raw* gyroRawTo1000dps; // omega= x2
+  phi= phi+ omega* delta_t;    // integrates omega, phi= x1
 
-  // Check if next step is due. 
-  if (time_step_counter== num_time_steps && responses_counter<= num_responses) {
-    time_step_counter= 0; 
-    responses_counter++; 
-    if (go_clockwise==1){
-      electrical_angle= electrical_angle+ angular_step* pole_pair_factor; 
-    } else {
-      electrical_angle= electrical_angle- angular_step* pole_pair_factor; 
-    }
-    go_clockwise= !go_clockwise;
-    motor.setPhaseVoltage(Uqmax, 0, electrical_angle); // setPhaseVoltage(Uq, Ud, electrical_angle)
-  } else if (responses_counter> num_responses){
-    motor.disable(); 
-  }
+  const float K1= -0.4243, K2= -0.9969;
+  u= K1* phi+ K2* omega; // u= Kx
+
+  electr_angle= u* deg_to_rad* pole_pair_factor; 
+  motor.setPhaseVoltage(Uqmax, 0, electr_angle);    
+ 
+  // output for matlab
+  Serial.print(newtime- time0);
+  Serial.print(',');
+  Serial.print(phi);
+  Serial.print(',');
+  Serial.print(omega);
+  Serial.print(',');
+  Serial.println(u);
+
 
   /**
    * Needed for realtime control, do not alter
@@ -111,23 +104,22 @@ void setup() {
    * Motor driver configuration.
    */
   // power supply voltage [V]
-  driver.voltage_power_supply = driver_voltage_power_supply; // set to e.g. 
-                                               // 7.5V in MyGB2208Motor.h 
+  driver.voltage_power_supply = driver_voltage_power_supply;
   driver.init();
-  motor.linkDriver(&driver);                   // link the motor and the driver
+  // link the motor and the driver
+  motor.linkDriver(&driver); // motor instance required, because setPhaseVoltage is
 
-  // set motor constraints and initialize motor
-  motor.voltage_limit = Uqmax;                 // set to e.g. 5V in MyGB2208Motor.h 
-  motor.velocity_limit = motor_velocity_limit; // set to e.g. 500deg/s in MyGB2208Motor.h  
+  // set motor constraints and init motor
+  motor.voltage_limit = Uqmax;   // [V]
+  motor.velocity_limit = 500/360*2*3.1416; // 500deg/s 
+  // init motor hardware
   motor.init();
 
+  // setPhaseVoltage(Uq, Ud, electrical_angle
   electrical_angle= 0; // rad
-  motor.setPhaseVoltage(Uqmax, 0, electrical_angle); // syntax is 
-                                               // setPhaseVoltage(Uq, Ud, electrical_angle)
-  delay(1000);                                 // wait 1s
-
-  go_clockwise= 1;
-
+  motor.setPhaseVoltage(Uqmax, 0, electrical_angle);    
+  delay(1000); 
+  
   /**
    * Sensor configuration (MPU6050)
    */
@@ -154,7 +146,9 @@ void setup() {
     delay(10); 
   }
 
-  // set angle and angular velocity to defined value
+  /** 
+   * initial conditions and initial reference value for angle phi 
+   */
   phi= 0.0;   // degrees 
   omega= 0.0; // degrees per second
   
@@ -163,8 +157,6 @@ void setup() {
    */
   // All times are in microseconds.
   // Do this at the end of setup.
-  time_step_counter= 0; 
-  responses_counter= 0; 
   newtime= 0;
   timestep= 5000; // 5000 microseconds= 5ms, not constant to compensate jitter
   integrated_jitter = 0; // used to adjust timestep

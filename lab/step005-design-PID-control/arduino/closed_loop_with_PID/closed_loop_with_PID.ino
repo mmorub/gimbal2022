@@ -11,16 +11,15 @@
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -37.3310;
+const int16_t gyro_y_raw_offset= -7.6220;
 const float delta_t= 0.005; // seconds
 const float deg_to_rad= 3.1416/180.0; 
 int16_t gyro_y_raw;
 
 // BLDC motor & driver instance
-// BLDCMotor motor = BLDCMotor(pole pair number);
-BLDCMotor motor = BLDCMotor(14);
-// BLDCDriver3PWM driver = BLDCDriver3PWM(pwmA, pwmB, pwmC, Enable(optional));
-BLDCDriver3PWM driver = BLDCDriver3PWM(11, 10, 9, 6, 5, 3);
+BLDCMotor motor = BLDCMotor(pole_pair_number);
+BLDCDriver3PWM driver = BLDCDriver3PWM(11, 10, 9, 6, 5, 3); // BLDCDriver3PWM(pwmA, pwmB, pwmC, Enable(optional));
+
 float electr_angle;  
 
 // Variables needed to ensure approximate realtime in loop().
@@ -38,8 +37,7 @@ void loop(){
   /**
    * Controller parameters from matlab
   */
-  const float kP= 2.6840, kI= 121.2507, kD= 0.0331; 
-
+  const float kP= 1.1216, kI= 51.6569, kD= 0.0242;
   /**
    * Needed to ensure approximate realtime, do not alter.
    * Wait until current timestep is over.
