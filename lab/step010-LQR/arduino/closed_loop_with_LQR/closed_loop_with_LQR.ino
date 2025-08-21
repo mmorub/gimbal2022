@@ -11,7 +11,7 @@
 #include <SimpleFOC.h> 
 
 // Variables needed for polling gyrometers.
-const int16_t gyro_y_raw_offset= -7.6220;
+const int16_t gyro_y_raw_offset= 17.0;
 const float delta_t= 0.005; // seconds
 const float deg_to_rad= 3.1416/180.0; 
 int16_t gyro_y_raw;
@@ -35,10 +35,6 @@ void loop(){
   float u; 
 
   /**
-   * Controller parameters from matlab
-  */
-  const float kP= 1.1216, kI= 51.6569, kD= 0.0242;
-  /**
    * Needed to ensure approximate realtime, do not alter.
    * Wait until current timestep is over.
    */
@@ -57,13 +53,16 @@ void loop(){
   /** 
    * Update states and e
    */
+
   omega= gyro_y_raw* gyroRawTo1000dps; // omega= x2
   phi= phi+ omega* delta_t;    // integrates omega, phi= x1
 
-  const float K1= -0.4243, K2= -0.9969;
+ // const float K1= -0.4243, K2= -0.9969;
+ // 2.3424    0.0370
+  const float K1= 2.3424, K2= 0.037;
   u= K1* phi+ K2* omega; // u= Kx
 
-  electr_angle= u* deg_to_rad* pole_pair_factor; 
+  electr_angle= (u+20.0)* deg_to_rad* pole_pair_factor; 
   motor.setPhaseVoltage(Uqmax, 0, electr_angle);    
  
   // output for matlab
